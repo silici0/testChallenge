@@ -1,0 +1,10 @@
+pnpm-lock.yaml
+public/mockServiceWorker.js
+src/routeTree.gen.ts
+**/*.generated.ts
+src/styles/generated
+docs/figma/tokens.json
+storybook-static
+coverage
+playwright-report
+test-results

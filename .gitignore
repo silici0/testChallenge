@@ -1,0 +1,17 @@
+node_modules
+dist
+dist-ssr
+storybook-static
+coverage
+*.local
+.env
+playwright-report
+test-results
+blob-report
+.features-gen
+.lighthouseci
+.vite
+.DS_Store
+*.tsbuildinfo
+__vitest_attachments__
+.vitest-attachments

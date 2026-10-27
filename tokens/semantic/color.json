@@ -1,0 +1,45 @@
+{
+  "color": {
+    "$type": "color",
+    "$description": "Tokens semânticos consumidos pelos componentes (viram utilitários Tailwind: bg-*, text-*, border-*)",
+    "background": { "$value": "{palette.ink}", "$description": "Fundo da página" },
+    "background-soft": { "$value": "{palette.ink-soft}" },
+    "overlay": { "$value": "#00000099", "$description": "Backdrop de modais (60%) — comentário #58" },
+    "surface": { "$value": "{palette.surface-card}", "$description": "Cards e painéis" },
+    "surface-raised": { "$value": "{palette.surface-raised}", "$description": "Inputs e áreas elevadas" },
+    "surface-strong": { "$value": "{palette.surface-dark}" },
+    "foreground": { "$value": "{palette.foreground}", "$description": "Texto principal (17.10:1 sobre background)" },
+    "foreground-secondary": {
+      "$value": "{palette.text-secondary}",
+      "$description": "Texto secundário (8.68:1 sobre surface)"
+    },
+    "foreground-muted": {
+      "$value": "{palette.text-muted}",
+      "$description": "Placeholder e legendas (5.43:1 sobre surface-raised)"
+    },
+    "accent": { "$value": "{palette.text-accent}", "$description": "Preços e destaques de texto" },
+    "primary": { "$value": "{palette.primary}", "$description": "Ações primárias, links, estado ativo" },
+    "primary-hover": { "$value": "{palette.primary-light}" },
+    "primary-active": { "$value": "{palette.primary-dark}" },
+    "on-primary": {
+      "$value": "{palette.ink}",
+      "$description": "Texto sobre primary (6.85:1). Nunca usar foreground sobre primary (2.50:1)"
+    },
+    "rare": { "$value": "{palette.amber}", "$description": "Selo RARO" },
+    "border": { "$value": "{palette.border}", "$description": "Divisores decorativos apenas (1.34:1)" },
+    "border-soft": { "$value": "{palette.border-soft}" },
+    "border-field": {
+      "$value": "{palette.secondary}",
+      "$description": "Bordas de campos e controles (≥ 3:1, WCAG 1.4.11)"
+    },
+    "ring": { "$value": "{palette.primary}", "$description": "Anel de foco (6.85:1)" },
+    "success": { "$value": "{palette.success}" },
+    "danger": { "$value": "{palette.error}", "$description": "Bordas e ícones de erro" },
+    "danger-text": {
+      "$value": "{palette.text-coral}",
+      "$description": "Texto de erro (7.29:1). error puro reprova como texto (4.39:1)"
+    },
+    "white": { "$value": "{palette.white}" },
+    "black": { "$value": "{palette.black}" }
+  }
+}

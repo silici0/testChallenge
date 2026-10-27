@@ -1,0 +1,104 @@
+{
+  "radius": {
+    "$type": "dimension",
+    "xs": {
+      "$value": "3px"
+    },
+    "sm": {
+      "$value": "4px"
+    },
+    "md": {
+      "$value": "6px"
+    },
+    "lg": {
+      "$value": "8px"
+    },
+    "xl": {
+      "$value": "16px"
+    },
+    "pill": {
+      "$value": "37px"
+    }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "glow-sm": {
+      "$value": {
+        "offsetX": "0px",
+        "offsetY": "0px",
+        "blur": "20px",
+        "spread": "0px",
+        "color": "#0a060473"
+      }
+    },
+    "glow-md": {
+      "$value": {
+        "offsetX": "0px",
+        "offsetY": "6px",
+        "blur": "20px",
+        "spread": "0px",
+        "color": "#0a060473"
+      }
+    },
+    "glow-lg": {
+      "$value": {
+        "offsetX": "0px",
+        "offsetY": "20px",
+        "blur": "20px",
+        "spread": "0px",
+        "color": "#0a060473"
+      }
+    },
+    "glow-xl": {
+      "$value": {
+        "offsetX": "0px",
+        "offsetY": "0px",
+        "blur": "40px",
+        "spread": "0px",
+        "color": "#0a060473"
+      }
+    },
+    "card": {
+      "$value": {
+        "offsetX": "0px",
+        "offsetY": "4px",
+        "blur": "12px",
+        "spread": "-2px",
+        "color": "#140d0a26"
+      }
+    }
+  },
+  "border-width": {
+    "$type": "dimension",
+    "hairline": {
+      "$value": "1px"
+    },
+    "field": {
+      "$value": "1.5px"
+    }
+  },
+  "layout": {
+    "$type": "dimension",
+    "page": {
+      "$value": "1200px",
+      "$description": "Largura do conteúdo (frame 1440 com padding 120)"
+    },
+    "sidebar": {
+      "$value": "310px"
+    },
+    "card": {
+      "$value": "258px"
+    }
+  },
+  "spacing": {
+    "$type": "dimension",
+    "section": {
+      "$value": "96px",
+      "$description": "Gap entre seções da Início"
+    },
+    "gutter": {
+      "$value": "16px",
+      "$description": "Margem lateral mínima no mobile"
+    }
+  }
+}

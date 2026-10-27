@@ -1,0 +1,38 @@
+{
+  "font-family": {
+    "$type": "fontFamily",
+    "mono": {
+      "$value": ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      "$description": "Família única do Figma"
+    }
+  },
+  "font-weight": {
+    "$type": "fontWeight",
+    "light": { "$value": 300 },
+    "regular": { "$value": 400 },
+    "medium": { "$value": 500 },
+    "bold": { "$value": 700 }
+  },
+  "font-size": {
+    "$type": "dimension",
+    "$description": "Escala consolidada a partir dos 59 estilos de texto do Figma (ver docs/figma/design-tokens.md)",
+    "tiny": { "$value": "11px", "$extensions": { "lineHeight": "16px" } },
+    "caption-sm": { "$value": "12px", "$extensions": { "lineHeight": "16px" } },
+    "caption": { "$value": "13px", "$extensions": { "lineHeight": "18px" } },
+    "label": { "$value": "14px", "$extensions": { "lineHeight": "20px" } },
+    "body-sm": { "$value": "15px", "$extensions": { "lineHeight": "22px" } },
+    "body": { "$value": "16px", "$extensions": { "lineHeight": "22px" } },
+    "body-lg": { "$value": "18px", "$extensions": { "lineHeight": "24px" } },
+    "title": { "$value": "20px", "$extensions": { "lineHeight": "28px" } },
+    "h3": { "$value": "22px", "$extensions": { "lineHeight": "29px" } },
+    "h2": { "$value": "24px", "$extensions": { "lineHeight": "32px" } },
+    "h1": { "$value": "28px", "$extensions": { "lineHeight": "36px" } },
+    "display-sm": { "$value": "32px", "$extensions": { "lineHeight": "40px" } },
+    "display": { "$value": "43px", "$extensions": { "lineHeight": "70px" } }
+  },
+  "tracking": {
+    "$type": "dimension",
+    "normal": { "$value": "0em" },
+    "wide": { "$value": "0.1em", "$description": "CTAs e títulos display (10% no Figma)" }
+  }
+}

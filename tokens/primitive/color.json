@@ -1,0 +1,30 @@
+{
+  "palette": {
+    "$type": "color",
+    "$description": "Primitivos extraídos da coleção 'Design Tokens' do Figma. Não use diretamente em componentes; use os tokens semânticos.",
+    "ink": { "$value": "#140d0a" },
+    "ink-soft": { "$value": "#1c110c" },
+    "ink-deep": { "$value": "#0e0907" },
+    "surface-card": { "$value": "#241612" },
+    "surface-raised": { "$value": "#2f1d15" },
+    "surface-dark": { "$value": "#38220f" },
+    "border": { "$value": "#3f2319" },
+    "border-soft": { "$value": "#55321f" },
+    "primary": { "$value": "#d28a4c" },
+    "primary-light": { "$value": "#dd9a5f" },
+    "primary-dark": { "$value": "#c47b3e" },
+    "amber": { "$value": "#e3a44e" },
+    "secondary": { "$value": "#b39463" },
+    "foreground": { "$value": "#f5f1eb" },
+    "text-primary": { "$value": "#f7f3ec" },
+    "text-secondary": { "$value": "#cfb28c" },
+    "text-muted": { "$value": "#b0916a" },
+    "text-accent": { "$value": "#e89b55" },
+    "text-coral": { "$value": "#f0805f" },
+    "success": { "$value": "#00a66c" },
+    "error": { "$value": "#ed1b2e" },
+    "white": { "$value": "#ffffff" },
+    "black": { "$value": "#000000" },
+    "gray-light": { "$value": "#ededed" }
+  }
+}
