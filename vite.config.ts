@@ -25,6 +25,9 @@ export default defineConfig({
     svgr(),
   ],
   resolve: { alias: { '@': path.resolve(dirname, 'src') } },
+  // Pré-empacota dependências carregadas dinamicamente (socket.io-client após o MSW, ADR-0024),
+  // evitando que o Vite reotimize e recarregue a página no meio de testes de navegador.
+  optimizeDeps: { include: ['socket.io-client', 'msw', 'msw/browser', '@mswjs/socket.io-binding', 'axios', 'zod'] },
   test: {
     coverage: {
       provider: 'v8',
