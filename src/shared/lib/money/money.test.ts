@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { addEth, compareEth, formatEth, isEthString, multiplyEth, parseEth } from './money'
+import { addEth, compareEth, formatEth, isEthString, multiplyEth, parseEth, percentOfEth, subtractEth } from './money'
 
 describe('isEthString', () => {
   it.each(['0', '1', '0.1', '12.30', '0.000000000000000001'])('aceita %s', (value) => {
@@ -60,5 +60,23 @@ describe('operações', () => {
     expect(compareEth('1.10', '1.1')).toBe(0)
     expect(compareEth('0.9', '1')).toBe(-1)
     expect(compareEth('2', '1.999999999999999999')).toBe(1)
+  })
+})
+
+describe('percentOfEth', () => {
+  it('aplica percentual em pontos-base, arredondando para baixo em wei', () => {
+    expect(percentOfEth('26.83', 1000)).toBe('2.683')
+    expect(percentOfEth('0.000000000000000003', 5000)).toBe('0.000000000000000001')
+  })
+
+  it('recusa pontos-base fora de 0–10000', () => {
+    expect(() => percentOfEth('1', 10001)).toThrow(/pontos-base/i)
+  })
+})
+
+describe('subtractEth', () => {
+  it('subtrai sem ficar negativo', () => {
+    expect(subtractEth('1', '0.25')).toBe('0.75')
+    expect(subtractEth('0.1', '0.2')).toBe('0')
   })
 })

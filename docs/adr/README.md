@@ -27,3 +27,4 @@ Formato: [`0000-template.md`](0000-template.md). Processo: [ADR-0001](0001-regis
 | [0021](0021-estrategia-de-testes-tdd-e-bdd.md)                  | Vitest + Testing Library, Playwright, TDD e BDD                           | Aceita | §9           |
 | [0022](0022-qualidade-de-codigo-e-convencoes.md)                | ESLint estrito, Prettier, Husky, lint-staged, Conventional Commits, SOLID | Aceita | §11, §12     |
 | [0023](0023-fixacao-de-versoes-typescript-6-e-msw-2.md)         | Fixar TypeScript 6.x e MSW 2.x                                            | Aceita | §12          |
+| [0024](0024-bootstrap-do-msw-e-socket-io.md)                    | Ordem de bootstrap do MSW e regras do Socket.IO simulado                  | Aceita | §6, §7       |

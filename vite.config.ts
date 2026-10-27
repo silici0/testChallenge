@@ -58,8 +58,18 @@ export default defineConfig({
           name: 'unit',
           environment: 'jsdom',
           include: ['src/**/*.test.{ts,tsx}'],
+          exclude: ['src/**/*.browser.test.{ts,tsx}'],
           setupFiles: ['src/test/setup.ts'],
           restoreMocks: true,
+        },
+      },
+      {
+        // Integração no navegador real: MSW (service worker + interceptação de WebSocket) e socket.io-client.
+        extends: true,
+        test: {
+          name: 'integration',
+          include: ['src/**/*.browser.test.{ts,tsx}'],
+          browser: { enabled: true, headless: true, provider: playwright(), instances: [{ browser: 'chromium' }] },
         },
       },
       {

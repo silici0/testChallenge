@@ -19,12 +19,15 @@ class ResizeObserverStub {
 vi.stubGlobal('ResizeObserver', ResizeObserverStub)
 
 const noop = () => undefined
-Object.assign(Element.prototype, {
-  hasPointerCapture: () => false,
-  setPointerCapture: noop,
-  releasePointerCapture: noop,
-  scrollIntoView: noop,
-})
+// Testes com `@vitest-environment node` (ex.: mocks de rede) não têm DOM.
+if ('Element' in globalThis) {
+  Object.assign(Element.prototype, {
+    hasPointerCapture: () => false,
+    setPointerCapture: noop,
+    releasePointerCapture: noop,
+    scrollIntoView: noop,
+  })
+}
 
 afterEach(() => {
   cleanup()

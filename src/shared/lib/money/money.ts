@@ -52,3 +52,17 @@ export function compareEth(a: EthString, b: EthString): -1 | 0 | 1 {
   if (difference === 0n) return 0
   return difference < 0n ? -1 : 1
 }
+
+/** Percentual em pontos-base (1000 = 10 %), arredondado para baixo em wei — o desconto nunca excede o valor exato. */
+export function percentOfEth(value: EthString, basisPoints: number): EthString {
+  if (!Number.isInteger(basisPoints) || basisPoints < 0 || basisPoints > 10_000) {
+    throw new RangeError(`Pontos-base inválidos: ${basisPoints}. Use um inteiro entre 0 e 10000.`)
+  }
+  return formatEth((parseEth(value) * BigInt(basisPoints)) / 10_000n)
+}
+
+/** Subtração com piso em zero (ex.: total após desconto). */
+export function subtractEth(value: EthString, amount: EthString): EthString {
+  const difference = parseEth(value) - parseEth(amount)
+  return formatEth(difference > 0n ? difference : 0n)
+}
