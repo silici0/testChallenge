@@ -16,5 +16,12 @@
     "skipLibCheck": true,
     "paths": { "@/*": ["./src/*"] }
   },
-  "include": ["vite.config.ts", "playwright.config.ts", "playwright.visual.config.ts", "commitlint.config.ts", "tests"]
+  "include": [
+    "vite.config.ts",
+    "playwright.config.ts",
+    "playwright.visual.config.ts",
+    "commitlint.config.ts",
+    "tests",
+    "lighthouse"
+  ]
 }

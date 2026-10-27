@@ -22,7 +22,12 @@ for (const story of stories) {
     await page.goto(`/iframe.html?id=${story.id}&viewMode=story`)
     const root = page.locator('#storybook-root')
     await expect(root).toBeVisible()
-    await page.evaluate(() => document.fonts.ready)
-    await expect(root).toHaveScreenshot(`${story.id}.png`)
+    await page.evaluate(async () => {
+      await document.fonts.ready
+      await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined)))
+    })
+    // Stories com portal (dialog, sheet, select aberto) capturam a página inteira.
+    const target = story.tags?.includes('visual:page') ? page : root
+    await expect(target).toHaveScreenshot(`${story.id}.png`)
   })
 }

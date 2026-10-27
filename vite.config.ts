@@ -29,14 +29,27 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
+      // Rotas e bootstrap são cobertos pelo E2E (Playwright); o dicionário de tokens é só documentação.
       exclude: [
         'src/**/*.stories.tsx',
         'src/**/*.generated.ts',
         'src/routeTree.gen.ts',
         'src/mocks/**',
         'src/main.tsx',
+        'src/app/**',
+        'src/routes/**',
+        'src/shared/design-tokens/token-dictionary.tsx',
       ],
-      reporter: ['text', 'html'],
+      reporter: ['text-summary', 'html', 'lcov'],
+      // Medida sobre unit + stories (pnpm test:coverage). Lógica pura exige mais.
+      thresholds: {
+        statements: 85,
+        branches: 75,
+        functions: 85,
+        lines: 85,
+        'src/shared/lib/**': { statements: 95, branches: 95, functions: 95, lines: 95 },
+        'src/shared/hooks/**': { statements: 95, branches: 90, functions: 95, lines: 95 },
+      },
     },
     projects: [
       {

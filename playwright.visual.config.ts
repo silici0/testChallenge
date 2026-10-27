@@ -9,7 +9,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   reporter: [['html', { open: 'never', outputFolder: 'playwright-report/visual' }], ['list']],
-  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled' } },
+  // Renderização determinística no container: nenhum pixel divergente é tolerado (só variação de cor por antialiasing).
+  expect: { toHaveScreenshot: { maxDiffPixels: 0, threshold: 0.2, animations: 'disabled' } },
   use: { baseURL: `http://localhost:${PORT}`, trace: 'retain-on-failure' },
   projects: [{ name: 'visual', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } } }],
   webServer: {

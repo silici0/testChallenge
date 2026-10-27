@@ -1,64 +1,99 @@
-# Testes E2E e regressão visual (Playwright)
+# Testes
 
-Decisão: [ADR-0014](adr/0014-playwright-e2e-e-regressao-visual.md).
+Decisões: [ADR-0014](adr/0014-playwright-e2e-e-regressao-visual.md) (Playwright), [ADR-0020](adr/0020-storybook-como-documentacao-e-bancada-de-testes.md) (Storybook) e [ADR-0021](adr/0021-estrategia-de-testes-tdd-e-bdd.md) (estratégia, TDD e BDD).
 
-## Execução
+## Pirâmide
 
-- `webServer`: `pnpm build && pnpm preview --port 4173` com `VITE_ENABLE_MOCKS=true` (testa o mesmo artefato publicado).
-- Projetos:
+| Nível                              | Ferramenta                            | Onde                           | Comando                        | Ambiente                 |
+| ---------------------------------- | ------------------------------------- | ------------------------------ | ------------------------------ | ------------------------ |
+| Unitário (lógica, hooks)           | Vitest + jsdom                        | `src/**/*.test.ts`             | `pnpm test` / `pnpm test:unit` | Node                     |
+| Componente                         | Vitest + Testing Library + user-event | `src/**/*.test.tsx`            | `pnpm test:unit`               | Node (jsdom)             |
+| Story (interação + acessibilidade) | Storybook + Vitest browser + axe      | `src/**/*.stories.tsx`         | `pnpm test:stories`            | Chromium                 |
+| Visual por componente              | Playwright sobre o Storybook estático | `tests/visual/`                | `pnpm test:visual`             | Docker (imagem oficial)  |
+| E2E / BDD                          | Playwright + playwright-bdd           | `tests/e2e/features/*.feature` | `pnpm test:e2e`                | Build + MSW, 3 viewports |
+| Performance                        | Lighthouse CI                         | `lighthouse/`                  | `pnpm lighthouse`              | Build + MSW              |
 
-| Projeto   | Navegador                         | Viewport   | Escopo                                   |
-| --------- | --------------------------------- | ---------- | ---------------------------------------- |
-| `desktop` | Chromium                          | 1440 × 900 | todos os specs                           |
-| `mobile`  | Chromium (`isMobile`, `hasTouch`) | 390 × 844  | fluxos principais (tag `@main`) + visual |
-| `tablet`  | Chromium                          | 768 × 1024 | visual + responsividade (`@responsive`)  |
+`pnpm test:coverage` roda os testes unitários e de story juntos e aplica os limites de cobertura. O mesmo comando roda no `pre-push` e na CI.
 
-- `reporter: [['html', { open: 'never' }], ['list']]`; `trace: 'retain-on-failure'`, `screenshot: 'only-on-failure'`, `video: 'retain-on-failure'`.
-- `retries: 0` local, `1` em CI (testes instáveis devem ser corrigidos, não mascarados).
+## Cobertura
 
-## Isolamento
+Medida com v8 sobre unitários e stories (as stories cobrem o que o jsdom não renderiza, como o posicionamento do Select e as animações do Toaster). Relatório em `coverage/`.
 
-Cada teste usa um `BrowserContext` novo (storage vazio) e a fixture `mock`:
+| Escopo                | Statements | Branches | Functions | Lines |
+| --------------------- | ---------: | -------: | --------: | ----: |
+| Global                |       85 % |     75 % |      85 % |  85 % |
+| `src/shared/lib/**`   |       95 % |     95 % |      95 % |  95 % |
+| `src/shared/hooks/**` |       95 % |     90 % |      95 % |  95 % |
 
-```ts
-test.use({ scenario: 'default' })
-// fixture: antes do goto, addInitScript define localStorage['mock:scenario'] e chama POST /__mock/reset
-```
+Ficam fora da medição: rotas e bootstrap (`src/routes`, `src/app`, `main.tsx`), cobertos pelo E2E; arquivos gerados; mocks; o dicionário de tokens, que é só documentação.
 
-- Seed fixo, PRNG fixo, sem dependência de ordem entre testes (`fullyParallel: true`).
-- Helpers: `mock.setScenario(id)`, `mock.updateNft(id, patch)`, `mock.resolveOrder(id, status)`, `mock.dropSocket()`, `mock.restoreSocket()`, `mock.replayEvent(id)` — todos chamam os endpoints `/__mock/*` via `page.evaluate(fetch)`, ou seja, passam pelo MSW.
-- `auth.loginAs('ana')`: login real pela UI ou pela API simulada (`POST /auth/login`), nunca injetando token fabricado.
+## Unitários e de componente
 
-## Tempo e eventos
+- Consultas por papel e nome acessível (`getByRole`, `getByLabelText`). Acesso direto ao DOM e `container` são proibidos pelo ESLint (`testing-library/no-node-access`).
+- Interação com `userEvent`, nunca `fireEvent`, para simular teclado e foco reais.
+- Hooks testados com `renderHook`, isolados da UI.
+- `src/test/setup.ts` fornece `ResizeObserver` e as APIs de pointer capture que o jsdom não tem e que as primitivas Radix usam.
 
-- `page.clock.install({ time: '2026-01-15T12:00:00Z' })` nos cenários sensíveis a tempo; `page.clock.runFor()` avança latências, expiração de cotação e resolução de pedidos.
-- Eventos de tempo real são disparados pelo mock (servidor) e chegam pelo `socket.io-client`; os testes nunca chamam funções do cliente nem manipulam o cache.
-- Asserções observam a UI (`getByRole`, `toHaveText`, `toBeVisible`) e o resultado das operações (estado retornado por `GET /orders/:id`, `GET /cart`) — não detalhes de implementação.
+## Stories
 
-## Matriz de cobertura (exigida pelo enunciado §9)
+- Toda story roda como teste no Chromium: renderização, `play` (quando há) e axe com `a11y.test: 'error'`. Uma violação de acessibilidade falha o teste.
+- Uma regra do axe só pode ser desativada por story, com a justificativa no código (exemplo: `aria-hidden-focus` no Select aberto, comportamento intencional do Radix).
 
-| #   | Spec                                     | Casos                                                                                                                                                                                                                                       |
-| --- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | `01-catalog-url-state.spec.ts`           | Busca, filtros combinados, ordenação, paginação, reset de página ao filtrar, refresh, voltar/avançar; `out-of-order` mostra o último termo; `empty-catalog`                                                                                 |
-| 2   | `02-nft-detail.spec.ts`                  | Acesso direto, NFT inexistente (404), edição indisponível, limite de quantidade                                                                                                                                                             |
-| 3   | `03-auth-session.spec.ts`                | Cadastro (+ `register-conflict` e validação), login, retorno ao fluxo, refresh mantém sessão, expiração (navegação e checkout), logout, troca de usuário sem vazamento de dados (favoritos/carrinho/pedidos de Ana não aparecem para Bruno) |
-| 4   | `04-favorites.spec.ts`                   | Favoritar/desfavoritar, persistência após refresh, `favorite-failure` com rollback e anúncio, recuperação ao trocar para `default`                                                                                                          |
-| 5   | `05-cart.spec.ts`                        | Adicionar, quantidades, limite, remover, cupom válido/inválido/expirado, refresh, merge visitante → login                                                                                                                                   |
-| 6   | `06-purchase-happy-path.spec.ts` `@main` | Catálogo → detalhe → carrinho → login → pagamento → revisão → pendente → recibo confirmado; carrinho sem os itens comprados; recibo imutável após `mock.updateNft`                                                                          |
-| 7   | `07-payment-failures.spec.ts`            | `payment-declined` preserva itens; clique repetido gera 1 pedido; `order-timeout` recupera o mesmo `orderId`                                                                                                                                |
-| 8   | `08-account.spec.ts`                     | Perfil, avatar (upload), senha (atual incorreta), carteiras principal/secundária, `form-validation`, persistência após refresh                                                                                                              |
-| 9   | `09-realtime-checkout.spec.ts`           | Item no carrinho, `nft.updated` de preço e de disponibilidade durante a navegação e no pagamento; aviso, resumo atualizado, confirmação bloqueada                                                                                           |
-| 10  | `10-realtime-resilience.spec.ts`         | `duplicate-events` (efeito único, sem regressão de versão), `socket-drop-pending`, refresh com pedido pendente, estados terminais                                                                                                           |
-| 11  | `11-a11y-keyboard.spec.ts`               | Fluxo de compra só com teclado, foco visível, trap/retorno de foco em dialog e drawer, erros associados (`aria-describedby`), `@axe-core/playwright` sem violações sérias                                                                   |
-| 12  | `12-loading-errors.spec.ts`              | `slow-network` mostra skeletons (catálogo, detalhe, resumo do carrinho) sem CLS; `http-errors` mostra erro; nova tentativa recupera; `reduced-motion` desativa shimmer                                                                      |
+## Regressão visual por componente
 
-## Regressão visual
+- `tests/visual/stories.spec.ts` lê o `storybook-static/index.json` e captura cada story com a tag `visual`. Stories que usam portal (dialog, sheet, select aberto) também levam a tag `visual:page` e capturam a página inteira.
+- Para estabilizar a captura: movimento reduzido emulado, animações desativadas, espera pelas fontes e por `document.getAnimations()`.
+- **As baselines são geradas e comparadas dentro de `mcr.microsoft.com/playwright:v<versão>-noble`** (`scripts/playwright-docker.sh`), com a mesma versão do `@playwright/test`. A renderização de fontes muda entre sistemas operacionais, então rodar fora do container (`pnpm test:visual:local`) serve só para depuração. `node scripts/check-playwright-image.mjs` garante que a imagem da CI acompanha o lockfile.
+- **Tolerância zero** (`maxDiffPixels: 0`, apenas variação de cor por antialiasing): como o container é determinístico, qualquer pixel diferente falha. Uma tolerância percentual deixaria passar regressões finas, como uma borda de 1px; isso aconteceu e motivou a regra.
+- As baselines ficam versionadas em `tests/visual/__screenshots__/`. Para atualizar, rode `pnpm test:visual:update`, que regrava **todas** as capturas (`--update-snapshots=all`), e revise as imagens no diff do PR.
 
-- `toHaveScreenshot` de **Início, Detalhe, Carrinho e Pagamento** em `desktop`, `tablet` e `mobile`.
-- Dados estáveis: cenário `default`, relógio congelado, animações desativadas (`animations: 'disabled'`), fontes locais aguardadas (`document.fonts.ready`), imagens carregadas.
-- Baselines versionadas em `tests/e2e/__screenshots__/`, geradas em Linux pela imagem oficial `mcr.microsoft.com/playwright` (`pnpm test:e2e:update` documenta o comando com Docker) para evitar diferenças de renderização entre SOs.
-- `maxDiffPixelRatio: 0.01`.
+## E2E / BDD
 
-## Artefatos
+- As funcionalidades ficam em Gherkin pt-BR (`# language: pt`) em `tests/e2e/features/`. Os steps reutilizáveis e tipados (`createBdd`) ficam em `tests/e2e/steps/`. O `bddgen` gera os specs em `.features-gen/`, que é ignorado pelo git.
+- Os testes rodam contra o mesmo artefato do deploy: `pnpm build && pnpm preview`, com `VITE_ENABLE_MOCKS=true`.
+- Viewports por tag:
 
-- `playwright-report/` (HTML) e `test-results/` (traces de falhas) — gerados a cada execução; em CI são publicados como artifacts.
+| Projeto   | Viewport            | Executa                |
+| --------- | ------------------- | ---------------------- |
+| `desktop` | 1440 × 900          | todos os cenários      |
+| `mobile`  | 390 × 844 (Pixel 7) | `@main`, `@responsive` |
+| `tablet`  | 768 × 1024          | `@responsive`          |
+
+- Relatório HTML em `playwright-report/` (`pnpm test:e2e:report`). Em caso de falha são gravados trace, vídeo e screenshot em `test-results/`.
+
+### Isolamento e controle (a implementar com a camada de mocks)
+
+- Cada cenário roda num contexto de navegador novo. A fixture `mock` (em `tests/e2e/steps/fixtures.ts`) seleciona o cenário e chama `POST /__mock/reset` antes do `goto` ([mock-scenarios.md](mock-scenarios.md#endpoints-de-controle)).
+- O tempo é controlado por `page.clock` nos cenários sensíveis (latência, expiração de cotação, resolução de pedido), porque os timers do MSW rodam na página.
+- Os eventos de tempo real são disparados pelo servidor simulado (endpoints `/__mock/*`) e chegam pelo `socket.io-client`. Os testes nunca manipulam o cache nem o estado do cliente.
+- O login é feito pela UI ou pela API simulada, nunca com token fabricado.
+
+## Matriz do enunciado (§9) → funcionalidades BDD
+
+| #   | Funcionalidade (`tests/e2e/features/`) | Cobertura                                                                                                          | Status |
+| --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ |
+| 1   | `catalogo.feature`                     | Busca, filtros combinados, ordenação, paginação, reset da página, refresh, histórico, `out-of-order`, vazio        | ⬜     |
+| 2   | `detalhe.feature`                      | Acesso direto, inexistente, edição indisponível, limite de quantidade                                              | ⬜     |
+| 3   | `conta-e-sessao.feature`               | Cadastro (conflito/validação), login, retorno ao fluxo, refresh, expiração, logout, troca de usuário sem vazamento | ⬜     |
+| 4   | `favoritos.feature`                    | Favoritar/desfavoritar, persistência, falha com rollback, recuperação                                              | ⬜     |
+| 5   | `carrinho.feature`                     | Adicionar, quantidades, limite, remover, cupons, refresh, merge visitante → login                                  | ⬜     |
+| 6   | `compra.feature` `@main`               | Catálogo → recibo confirmado; carrinho sem os itens comprados; recibo imutável                                     | ⬜     |
+| 7   | `falhas-de-pagamento.feature`          | Recusa, clique repetido, timeout com o mesmo pedido                                                                | ⬜     |
+| 8   | `perfil-e-carteiras.feature`           | Perfil, avatar, senha, carteiras, erros de validação, persistência                                                 | ⬜     |
+| 9   | `tempo-real-checkout.feature`          | `nft.updated` de preço/disponibilidade durante o checkout                                                          | ⬜     |
+| 10  | `tempo-real-resiliencia.feature`       | Duplicados/antigos, queda do socket, refresh com pedido pendente                                                   | ⬜     |
+| 11  | `acessibilidade.feature`               | Compra só com teclado, foco de diálogos, validação de formulários, axe                                             | ⬜     |
+| 12  | `carregamento-e-erros.feature`         | Skeletons em rede lenta, sem CLS, erro e nova tentativa, movimento reduzido                                        | ⬜     |
+| —   | `home.feature`                         | Smoke: acesso direto, sem rolagem horizontal, rota inexistente                                                     | ✅     |
+
+Regressão visual de página (exigida no §9): Início, Detalhe, Carrinho e Pagamento em `desktop`, `tablet` e `mobile`, com baselines em `tests/e2e/__screenshots__/`, também geradas no container (`pnpm test:e2e:docker -- --update-snapshots`).
+
+## CI (`.github/workflows/ci.yml`)
+
+| Job          | Executa                                                                                               |
+| ------------ | ----------------------------------------------------------------------------------------------------- |
+| `quality`    | Tokens sincronizados, typecheck, lint, Prettier, versão da imagem do Playwright e commitlint (em PRs) |
+| `tests`      | `pnpm test:coverage` (unitários + stories no Chromium) e artefato `coverage/`                         |
+| `visual`     | Regressão visual dos componentes no container do Playwright                                           |
+| `e2e`        | BDD/E2E nos 3 viewports, no container; artefato com relatório e traces                                |
+| `lighthouse` | Somente na `main`: `pnpm lighthouse` e artefato com os relatórios                                     |

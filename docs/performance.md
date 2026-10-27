@@ -28,7 +28,7 @@ A auditoria carrega as mesmas imagens, fontes, MSW e Socket.IO da entrega. Não 
 
 ## Resultados
 
-_Preencher a partir de `summary.md` após a primeira auditoria._
+_Preencher a partir de `summary.md` quando as telas Início e Detalhe estiverem implementadas. O pipeline (`pnpm lighthouse`) já foi validado de ponta a ponta sobre a casca do app; essa execução não foi versionada porque ainda não representa a entrega._
 
 | Página  | Perfil  | Perf. | A11y |  BP | SEO | LCP | CLS | TBT |
 | ------- | ------- | ----: | ---: | --: | --: | --: | --: | --: |

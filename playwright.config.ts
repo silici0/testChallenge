@@ -17,7 +17,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [['html', { open: 'never' }], ['list']],
-  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled' } },
+  // Renderização determinística no container: nenhum pixel divergente é tolerado (só variação de cor por antialiasing).
+  expect: { toHaveScreenshot: { maxDiffPixels: 0, threshold: 0.2, animations: 'disabled' } },
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'retain-on-failure',

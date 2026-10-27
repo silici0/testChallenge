@@ -23,7 +23,16 @@ Checklist para um componente novo:
 - [ ] Aceita as props nativas do elemento e `className`. Variantes em `cva`.
 - [ ] Acessível: nome acessível, foco visível, estados que não dependem só de cor, `aria-*` corretos.
 - [ ] A story tem `args`, controles, uma story por estado relevante, `play` quando há interação e a tag `visual`.
-- [ ] `pnpm test:unit`, `pnpm test:stories` e `pnpm test:visual` passam. Baselines novas foram geradas com `pnpm test:visual:update` e revisadas.
+- [ ] `pnpm test:coverage` e `pnpm test:visual` passam. Baselines novas foram geradas com `pnpm test:visual:update` (Docker) e revisadas.
+
+## Primitivas shadcn/ui
+
+Componentes com comportamento complexo (Dialog, Sheet, Tabs, Select, Checkbox, Slider, Toaster) vêm do shadcn/ui, em `src/shared/ui/primitives/`:
+
+1. `pnpm dlx shadcn@latest add <componente>` (configuração em `components.json`).
+2. Adapte as classes aos tokens semânticos (`bg-surface`, `text-foreground-secondary`, `border-border-field`…) e remova as variantes `dark:`, já que o tema é único.
+3. Traduza os textos (“Close” → “Fechar”) e garanta nome acessível em todos os controles.
+4. Escreva o teste (jsdom quando possível) e a story com `play`. Componentes com portal levam a tag `visual:page`.
 
 ## Fluxo TDD (lógica, hooks, domínio)
 
@@ -62,4 +71,4 @@ Escopos: `tokens`, `ui`, `hooks`, `lib`, `catalog`, `nft`, `cart`, `checkout`, `
 | ------------ | -------------------------------------------------------------------------------------------- |
 | `pre-commit` | `lint-staged`: ESLint `--max-warnings=0`, Prettier, `vitest related` e regeneração de tokens |
 | `commit-msg` | commitlint                                                                                   |
-| `pre-push`   | `pnpm typecheck && pnpm test:unit`                                                           |
+| `pre-push`   | `pnpm typecheck && pnpm test:coverage` (unitários + stories com limites de cobertura)        |

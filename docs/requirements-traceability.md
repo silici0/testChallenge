@@ -25,18 +25,18 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 
 ## §2 Stack obrigatória
 
-| Tecnologia              | Uso efetivo                                                                           | Status |
-| ----------------------- | ------------------------------------------------------------------------------------- | ------ |
-| React, TypeScript       | App inteira, `strict`                                                                 | ⬜     |
-| TanStack Router         | Rotas, search params, guards ([ADR-0003](adr/0003-tanstack-router-file-based.md))     | ⬜     |
-| TanStack Query          | Todas as queries/mutations ([ADR-0004](adr/0004-tanstack-query-politica-de-cache.md)) | ⬜     |
-| Axios                   | Único cliente HTTP ([ADR-0009](adr/0009-axios-cliente-http.md))                       | ⬜     |
-| REST                    | [api-contracts.md](api-contracts.md)                                                  | ⬜     |
-| Socket.IO               | `nft.updated`, `order.updated` ([realtime.md](realtime.md))                           | ⬜     |
-| Tailwind CSS, shadcn/ui | [ADR-0013](adr/0013-tailwind-v4-e-shadcn-com-tokens-do-figma.md)                      | ⬜     |
-| MSW                     | REST + WebSocket ([ADR-0006](adr/0006-msw-como-servidor-simulado.md))                 | ⬜     |
-| Playwright              | [testing.md](testing.md)                                                              | ⬜     |
-| Lighthouse              | [performance.md](performance.md)                                                      | ⬜     |
+| Tecnologia              | Uso efetivo                                                                                                                                                                                                   | Status                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| React, TypeScript       | App inteira, `strict`                                                                                                                                                                                         | ⬜                                       |
+| TanStack Router         | Rotas, search params, guards ([ADR-0003](adr/0003-tanstack-router-file-based.md))                                                                                                                             | ⬜                                       |
+| TanStack Query          | Todas as queries/mutations ([ADR-0004](adr/0004-tanstack-query-politica-de-cache.md))                                                                                                                         | ⬜                                       |
+| Axios                   | Único cliente HTTP ([ADR-0009](adr/0009-axios-cliente-http.md))                                                                                                                                               | ⬜                                       |
+| REST                    | [api-contracts.md](api-contracts.md)                                                                                                                                                                          | ⬜                                       |
+| Socket.IO               | `nft.updated`, `order.updated` ([realtime.md](realtime.md))                                                                                                                                                   | ⬜                                       |
+| Tailwind CSS, shadcn/ui | Tokens no `@theme` + 7 primitivas shadcn (Dialog, Sheet, Tabs, Select, Checkbox, Slider, Toaster) adaptadas, em `src/shared/ui/primitives` ([ADR-0013](adr/0013-tailwind-v4-e-shadcn-com-tokens-do-figma.md)) | 🟡 (base pronta; uso nas telas pendente) |
+| MSW                     | REST + WebSocket ([ADR-0006](adr/0006-msw-como-servidor-simulado.md))                                                                                                                                         | ⬜                                       |
+| Playwright              | [testing.md](testing.md)                                                                                                                                                                                      | ⬜                                       |
+| Lighthouse              | [performance.md](performance.md), `pnpm lighthouse` validado                                                                                                                                                  | 🟡                                       |
 
 ## §3 Telas e fluxos
 

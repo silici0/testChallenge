@@ -42,7 +42,7 @@ Complementares (critério do candidato):
 
 ## 2. Setup
 
-Pré-requisitos: **Node.js 22 LTS** e **pnpm 10** (`corepack enable`).
+Pré-requisitos: **Node.js 22+** e **pnpm 10** (`corepack enable`). Para os testes visuais: **Docker**.
 
 ```bash
 git clone <repo> nft-marketplace && cd nft-marketplace
@@ -141,14 +141,16 @@ Lista completa, determinística e com seed fixo em [`docs/mock-scenarios.md`](do
 | `pnpm format` / `pnpm format:check`            | Prettier (com ordenação de classes Tailwind)                                                 |
 | `pnpm tokens:build`                            | Style Dictionary: `tokens/` → `@theme` do Tailwind + catálogo TS                             |
 | `pnpm test`                                    | Vitest em modo watch (unitários, hooks e componentes)                                        |
-| `pnpm test:unit` / `pnpm test:coverage`        | Vitest uma vez / com cobertura (`coverage/`)                                                 |
+| `pnpm test:unit`                               | Vitest uma vez (unitários, hooks e componentes)                                              |
+| `pnpm test:coverage`                           | Unitários + stories com limites de cobertura (roda no `pre-push` e na CI)                    |
 | `pnpm storybook` / `pnpm storybook:build`      | Storybook em `http://localhost:6006` / build estático                                        |
 | `pnpm test:stories`                            | Todas as stories no Chromium: `play` + axe (Vitest browser)                                  |
-| `pnpm test:visual` / `pnpm test:visual:update` | Captura por componente (Playwright sobre o Storybook) / atualizar baselines                  |
+| `pnpm test:visual` / `pnpm test:visual:update` | Captura por componente na imagem Docker oficial do Playwright / atualizar baselines          |
+| `pnpm test:e2e:docker`                         | E2E/BDD dentro do container (para baselines de página)                                       |
 | `pnpm test:e2e`                                | BDD/E2E: `bddgen` + Playwright em desktop (1440), tablet (768) e mobile (390) contra o build |
 | `pnpm test:e2e:ui` / `pnpm test:e2e:report`    | Playwright UI / relatório HTML                                                               |
-| `pnpm lighthouse`                              | Auditoria mobile + desktop, 3 execuções, mediana                                             |
-| `pnpm validate`                                | typecheck, lint, format e testes unitários                                                   |
+| `pnpm lighthouse`                              | Build + auditoria mobile e desktop (3 execuções por página) + `summary.md` com medianas      |
+| `pnpm validate`                                | Typecheck, lint, formatação, versão da imagem do Playwright e `test:coverage`                |
 | `pnpm msw:init`                                | Regenera `public/mockServiceWorker.js`                                                       |
 
 Fluxo de trabalho, anatomia de componentes, TDD, BDD e commits: [`CONTRIBUTING.md`](CONTRIBUTING.md).

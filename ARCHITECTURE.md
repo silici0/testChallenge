@@ -42,6 +42,7 @@ src/
   shared/
     api/  realtime/  a11y/
     ui/                    design system endêmico (componente + variants + test + stories)
+      primitives/          primitivas shadcn/ui (Radix) adaptadas aos tokens
     hooks/                 hooks reutilizáveis com testes isolados
     lib/                   money (bigint), cn (tailwind-merge ciente dos tokens)
     design-tokens/         catálogo gerado + dicionário no Storybook
@@ -58,7 +59,10 @@ src/
 tokens/                    fonte DTCG (primitive/ e semantic/), compilada pelo Style Dictionary
 .storybook/                configuração do Storybook (autodocs, a11y, vitest)
 tests/e2e/                 features Gherkin (BDD), steps, __screenshots__
-tests/visual/              captura por story do Storybook
+tests/visual/              captura por story do Storybook (gerada no container do Playwright)
+lighthouse/                configs LHCI (mobile/desktop) e summarize.ts
+scripts/                   playwright-docker.sh, check-playwright-image.mjs
+.github/workflows/         CI: quality, tests, visual, e2e, lighthouse
 lighthouse/                lighthouserc.mobile.cjs, lighthouserc.desktop.cjs, summarize.ts
 docs/                      documentação e ADRs
 ```

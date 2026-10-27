@@ -15,7 +15,7 @@ O enunciado exige Playwright para E2E e regressão visual. Faltava definir os n�
 | Unitário            | **Vitest** + jsdom                        | Funções puras (`money`, `cn`), hooks (`renderHook`), regras de domínio                                       | `pnpm test:unit`    |
 | Componente          | Vitest + **Testing Library** + user-event | Comportamento e acessibilidade observáveis (consultas por papel e nome, nunca por classe ou DOM interno)     | `pnpm test:unit`    |
 | Story               | Storybook + Vitest browser (Chromium)     | `play` + axe em toda story                                                                                   | `pnpm test:stories` |
-| Visual (componente) | Playwright                                | Uma captura por story `visual`                                                                               | `pnpm test:visual`  |
+| Visual (componente) | Playwright na imagem Docker oficial       | Uma captura por story `visual`, com baselines geradas no container                                           | `pnpm test:visual`  |
 | E2E / BDD           | Playwright + **playwright-bdd**           | Funcionalidades em Gherkin pt-BR (`tests/e2e/features`), contra o build com MSW, em desktop, tablet e mobile | `pnpm test:e2e`     |
 
 - **Vitest em vez de Jest:** usa a mesma configuração e os mesmos transforms do Vite (SVGR, aliases, Tailwind), é nativo em ESM e o mesmo runner serve para os testes de story.
@@ -23,7 +23,7 @@ O enunciado exige Playwright para E2E e regressão visual. Faltava definir os n�
 - **TDD** para lógica (bibliotecas, hooks, regras de domínio e contratos): escreve-se o teste, confirma-se que falha (vermelho), implementa-se o mínimo (verde) e depois refatora-se. Os primeiros módulos (`money`, `cn`, `useQuantityStepper`, `Button`) seguiram esse ciclo.
 - **BDD** para fluxos de usuário: cada funcionalidade do §9 vira um `.feature` em português, com cenários `Dado/Quando/Então`. Os steps são reutilizáveis e tipados (`createBdd`), e as tags `@main` e `@responsive` definem os viewports.
 - **Hooks** ficam em arquivos próprios e são testados isoladamente. Componentes de apresentação só recebem estado e callbacks (SRP).
-- Toda nova unidade em `src/shared` precisa de teste. A cobertura é medida com `pnpm test:coverage`.
+- Toda nova unidade em `src/shared` precisa de teste. `pnpm test:coverage` (unitários + stories) aplica limites mínimos: 85 % global e 95 % em `lib/` e `hooks/`. Roda no `pre-push` e na CI.
 
 ## Consequências
 
