@@ -30,9 +30,9 @@ export function Hero({ slides, cta }: HeroProps) {
         </p>
         <div>{cta}</div>
         {/* Reserva a linha dos indicadores enquanto os destaques carregam (evita CLS). */}
-        {!slides && <div aria-hidden="true" className="h-3" />}
+        {!slides && <div aria-hidden="true" className="h-6" />}
         {slides && slides.length > 1 && (
-          <div role="group" aria-label="Destaques" className="flex gap-2 self-center md:self-end">
+          <div role="group" aria-label="Destaques" className="flex self-center md:self-end">
             {slides.map((slide, index) => (
               <button
                 key={slide.id}
@@ -42,11 +42,17 @@ export function Hero({ slides, cta }: HeroProps) {
                 onClick={() => {
                   setActive(index)
                 }}
-                className={cn(
-                  'size-3 rounded-pill transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                  index === active ? 'bg-primary' : 'bg-primary/40 hover:bg-primary/70',
-                )}
-              />
+                // Alvo de 24×24 px (WCAG 2.5.8) com o ponto de 12 px do Figma no centro.
+                className="group flex size-6 items-center justify-center rounded-pill focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'size-3 rounded-pill transition-colors',
+                    index === active ? 'bg-primary' : 'bg-primary/40 group-hover:bg-primary/70',
+                  )}
+                />
+              </button>
             ))}
           </div>
         )}

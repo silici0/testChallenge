@@ -29,7 +29,7 @@
     "test:e2e:report": "playwright show-report",
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:build": "storybook build -o storybook-static",
-    "lighthouse": "pnpm build && pnpm lighthouse:mobile && pnpm lighthouse:desktop && tsx lighthouse/summarize.ts",
+    "lighthouse": "pnpm build && pnpm lighthouse:mobile && pnpm lighthouse:desktop && tsx lighthouse/summarize.ts && prettier --write \"docs/performance/reports/**/summary.md\"",
     "lighthouse:mobile": "lhci collect --config=lighthouse/lighthouserc.mobile.cjs && lhci upload --config=lighthouse/lighthouserc.mobile.cjs",
     "lighthouse:desktop": "lhci collect --config=lighthouse/lighthouserc.desktop.cjs && lhci upload --config=lighthouse/lighthouserc.desktop.cjs",
     "msw:init": "msw init public --save",

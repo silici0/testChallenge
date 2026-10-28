@@ -19,4 +19,4 @@ docker run --rm --ipc=host \
   "$IMAGE" \
   bash -c "npx -y pnpm@${PNPM_VERSION} install --frozen-lockfile --config.confirmModulesPurge=false >/dev/null \
     && npx -y pnpm@${PNPM_VERSION} exec playwright test ${ARGS}; status=\$?; \
-    chown -R $(id -u):$(id -g) tests public storybook-static test-results playwright-report .features-gen 2>/dev/null; exit \$status"
+    chown -R $(id -u):$(id -g) tests public dist storybook-static test-results playwright-report .features-gen 2>/dev/null; exit \$status"

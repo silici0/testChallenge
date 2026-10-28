@@ -16,3 +16,7 @@ blob-report
 __vitest_attachments__
 .vitest-attachments
 .pnpm-store
+
+# Relatórios do Lighthouse: só o summary.md é versionado (docs/performance.md)
+docs/performance/reports/**/*.html
+docs/performance/reports/**/*.json
