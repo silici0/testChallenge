@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link, useNavigate, useRouteContext } from '@tanstack/react-router'
+import { Link, useNavigate, useRouteContext, useRouter } from '@tanstack/react-router'
 
 import type { AuthResponse } from '@/contracts'
 import { featuredQuery } from '@/features/catalog/api'
@@ -32,14 +32,19 @@ function Backdrop() {
 function useAuthFlow(redirect: string | undefined) {
   const { session } = useRouteContext({ from: '__root__' })
   const navigate = useNavigate()
+  const router = useRouter()
   const destination = isSafeRedirect(redirect) ? redirect : '/'
   return {
     complete: async (auth: AuthResponse) => {
       await session.signedIn(auth)
       await navigate({ to: destination, replace: true })
     },
+    // Desistir do login: voltar ao destino só se ele for público. Uma rota privada traria o modal de volta
+    // pelo guard (loop), então nesse caso o visitante vai para a Início.
     close: () => {
-      void navigate({ to: destination === '/login' ? '/' : destination })
+      const { pathname } = new URL(destination, window.location.origin)
+      const isPrivate = router.matchRoutes(pathname, {}).some((match) => match.staticData.requiresAuth)
+      void navigate({ to: isPrivate || pathname === '/login' ? '/' : destination, replace: true })
     },
   }
 }

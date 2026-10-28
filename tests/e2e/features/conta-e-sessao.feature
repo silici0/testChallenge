@@ -58,3 +58,16 @@ Funcionalidade: Conta e sessão
     E fecho o diálogo pelo X
     Então vejo o título "Emerald Ape #042"
     E a URL não contém "/login"
+
+  Esquema do Cenário: Fechar o login vindo de uma rota privada não reabre o modal
+    Dado que acesso a rota "/login?redirect=<destino>"
+    Quando fecho o diálogo pelo X
+    Então vejo o título "SEJA DONO DO FUTURO DA ARTE DIGITAL"
+    E a URL não contém "/login"
+
+    Exemplos:
+      | destino                    |
+      | %2Faccount%2Fprofile       |
+      | %2Fcheckout                |
+      | %2Forders%2Ford_qualquer   |
+

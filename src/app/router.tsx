@@ -31,4 +31,8 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: ReturnType<typeof createAppRouter>
   }
+  interface StaticDataRouteOption {
+    /** Rota privada (guard `requireAuth`): o login não volta para ela se o usuário desistir. */
+    requiresAuth?: boolean
+  }
 }
