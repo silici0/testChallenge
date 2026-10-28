@@ -108,6 +108,10 @@ Exigida no §9: Início, Detalhe, Carrinho e Pagamento em `desktop` (1440), `tab
 - Baselines em `tests/visual-pages/__screenshots__/<viewport>/`. Comandos: `pnpm test:visual:pages` para comparar e `pnpm test:visual:pages:update` para regravar.
 - No mobile, a barra inferior fixa aparece no ponto da viewport dentro da captura de página inteira. É o comportamento do Playwright para elementos `fixed` e é determinístico.
 
+## Verificação manual em dispositivo real
+
+Em 2026-10-28, no deploy público e num celular de verdade, os dois Selects (Radix) funcionaram por toque: "Ordenar por" no catálogo e "Rede" no formulário de carteira. Ao escolher Ethereum, o campo ENS volta a aparecer, e a rede salva continua lá depois do refresh. A mesma verificação, com toque emulado, também passou no projeto `mobile` do Playwright. Os steps de E2E continuam escolhendo as opções pelo teclado, que é o caminho mais estável na emulação.
+
 ## CI (`.github/workflows/ci.yml`)
 
 | Job          | Executa                                                                                               |
