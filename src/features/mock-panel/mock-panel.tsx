@@ -42,9 +42,9 @@ export function MockPanelView({
         <Button
           variant="outline"
           size="sm"
-          // O nome acessível começa pelo texto visível (WCAG 2.5.3).
+          // O nome acessível começa pelo texto visível (WCAG 2.5.3). Aba vertical na borda: cobre o mínimo da loja.
           aria-label="Mock: painel de simulação"
-          className="fixed bottom-24 left-4 z-40 border-dashed bg-background lg:bottom-4"
+          className="fixed top-1/2 left-0 z-40 h-auto w-6 -translate-y-1/2 rounded-l-none border-l-0 border-dashed bg-background px-0 py-2 text-caption-sm leading-none [writing-mode:vertical-rl]"
         >
           Mock
         </Button>

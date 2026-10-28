@@ -2,7 +2,15 @@ import { Link } from '@tanstack/react-router'
 import { type SyntheticEvent, useState } from 'react'
 
 import { categoryLabels } from '@/contracts'
-import { Button, Icon, type IconName, UNAVAILABLE_HINT, UnavailableAction } from '@/shared/ui'
+import {
+  Button,
+  Icon,
+  type IconName,
+  SocialIcon,
+  type SocialNetwork,
+  UNAVAILABLE_HINT,
+  UnavailableAction,
+} from '@/shared/ui'
 
 const BENEFITS: { icon: IconName; title: string; text: string }[] = [
   {
@@ -57,6 +65,14 @@ function Newsletter() {
 
 const columnTitle = 'mb-3 text-body-lg font-bold text-foreground'
 const footerLink = 'text-label text-foreground hover:text-primary focus-visible:outline-2 focus-visible:outline-ring'
+
+const SOCIAL_NETWORKS: { id: SocialNetwork; label: string }[] = [
+  { id: 'facebook', label: 'Facebook' },
+  { id: 'instagram', label: 'Instagram' },
+  { id: 'x', label: 'X (Twitter)' },
+  { id: 'linkedin', label: 'LinkedIn' },
+  { id: 'youtube', label: 'YouTube' },
+]
 
 export function SiteFooter() {
   return (
@@ -142,11 +158,11 @@ export function SiteFooter() {
           <div>
             <h2 className={columnTitle}>Redes sociais</h2>
             <ul className="flex gap-2">
-              {['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'YouTube'].map((network) => (
-                <li key={network}>
+              {SOCIAL_NETWORKS.map(({ id, label }) => (
+                <li key={id}>
                   <UnavailableAction variant="outline" size="sm" className="size-8 px-0">
-                    <span aria-hidden="true">{network.slice(0, 2)}</span>
-                    <span className="sr-only">{network}</span>
+                    <SocialIcon network={id} />
+                    <span className="sr-only">{label}</span>
                   </UnavailableAction>
                 </li>
               ))}

@@ -37,7 +37,7 @@ function HomePage() {
   const { data: featured } = useQuery(featuredQuery())
   const items = featured?.items
   return (
-    <div className="flex flex-col gap-section">
+    <div className="flex flex-col gap-8 lg:gap-section">
       <Hero
         slides={items?.slice(0, 3)}
         cta={

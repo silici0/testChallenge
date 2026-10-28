@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import type { NftDetail } from '@/contracts'
-import { Icon, Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui'
+import { Icon, SocialIcon, Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui'
 
 const shortAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`
 const NETWORK = { ethereum: 'Ethereum', polygon: 'Polygon', solana: 'Solana' } as const
@@ -34,12 +34,12 @@ export function ShareLinks({ name }: { name: string }) {
     {
       label: 'LinkedIn',
       href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-      icon: 'link' as const,
+      network: 'linkedin' as const,
     },
     {
-      label: 'Twitter',
+      label: 'X (Twitter)',
       href: `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`,
-      icon: 'share' as const,
+      network: 'x' as const,
     },
   ]
   const linkClass =
@@ -63,7 +63,7 @@ export function ShareLinks({ name }: { name: string }) {
           className={linkClass}
           aria-label={`Compartilhar no ${item.label} (abre em nova aba)`}
         >
-          <Icon name={item.icon} size={18} />
+          <SocialIcon network={item.network} width={18} height={18} />
         </a>
       ))}
       <button
