@@ -81,6 +81,9 @@ Then('a URL não contém {string}', async ({ page }, fragment: string) => {
 })
 
 Then('a página não tem rolagem horizontal', async ({ page }) => {
+  // Mede o estado final: conteúdo carregado (um skeleton pode ser mais estreito que o conteúdo real).
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0)
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   )

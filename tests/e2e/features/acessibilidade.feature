@@ -61,3 +61,21 @@ Funcionalidade: Acessibilidade e teclado
     Quando ativo pelo teclado o botão "Confirmar compra"
     Então depois vejo o recibo confirmado com "Emerald Ape #042"
     E a página não tem violações de acessibilidade
+
+  @responsive
+  Esquema do Cenário: Nenhuma tela tem rolagem horizontal
+    Dado que estou autenticado como "ana@example.test"
+    E tenho 1 unidades de "Emerald Ape #042" no carrinho
+    Quando navego para "<rota>"
+    Então a página não tem rolagem horizontal
+
+    Exemplos:
+      | rota                      |
+      | /                         |
+      | /nfts/nft_emerald-ape-042 |
+      | /cart                     |
+      | /checkout                 |
+      | /account/profile          |
+      | /account/wallets          |
+      | /account/favorites        |
+

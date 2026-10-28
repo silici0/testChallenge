@@ -84,4 +84,17 @@ describe('createSessionManager', () => {
     expect(announce).toHaveBeenCalledWith(expect.stringMatching(/sessão expirou/i), 'assertive')
     expect(store.getSnapshot().token).toBeNull()
   })
+
+  it('lembra da expiração até o próximo login ou logout (o guard informa o motivo)', async () => {
+    const { manager } = setup()
+    await manager.signedIn(auth('usr_ana'))
+    expect(manager.hasExpired()).toBe(false)
+    manager.expire()
+    expect(manager.hasExpired()).toBe(true)
+    await manager.signedIn(auth('usr_ana'))
+    expect(manager.hasExpired()).toBe(false)
+    manager.expire()
+    await manager.logout()
+    expect(manager.hasExpired()).toBe(false)
+  })
 })

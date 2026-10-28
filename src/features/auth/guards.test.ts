@@ -20,6 +20,21 @@ describe('guards', () => {
     expect(thrown).toMatchObject({ options: { to: '/login', search: { redirect: '/checkout' } } })
   })
 
+  it('depois de uma expiração, o redirecionamento informa o motivo', () => {
+    let thrown: unknown
+    try {
+      requireAuth({
+        context: { user: null, session: { hasExpired: () => true } },
+        location: { href: '/checkout' },
+      })
+    } catch (error) {
+      thrown = error
+    }
+    expect(thrown).toMatchObject({
+      options: { to: '/login', search: { redirect: '/checkout', reason: 'expired' } },
+    })
+  })
+
   it('usuário autenticado segue', () => {
     const user = { id: 'usr_ana', displayName: 'Ana', username: 'ana', email: 'a@example.test', avatarUrl: null }
     expect(requireAuth({ context: { user }, location: { href: '/checkout' } })).toEqual({ user })

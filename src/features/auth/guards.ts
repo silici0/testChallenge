@@ -6,9 +6,22 @@ import type { User } from '@/contracts'
 export const isSafeRedirect = (value: unknown): value is string =>
   typeof value === 'string' && value.startsWith('/') && !value.startsWith('//')
 
-/** Rotas privadas: visitante vai ao login e volta para onde estava (enunciado §3.4). */
-export function requireAuth({ context, location }: { context: { user: User | null }; location: { href: string } }) {
-  if (!context.user) throw redirect({ to: '/login', search: { redirect: location.href } })
+interface GuardContext {
+  user: User | null
+  session?: { hasExpired: () => boolean }
+}
+
+/**
+ * Rotas privadas: visitante vai ao login e volta para onde estava (enunciado §3.4).
+ * Se a sessão acabou de expirar, o motivo vai junto: ao recarregar com a sessão vencida, este redirect
+ * concorre com o do `session.expire()` e não pode perder o aviso.
+ */
+export function requireAuth({ context, location }: { context: GuardContext; location: { href: string } }) {
+  if (!context.user)
+    throw redirect({
+      to: '/login',
+      search: { redirect: location.href, reason: context.session?.hasExpired() ? 'expired' : undefined },
+    })
   return { user: context.user }
 }
 

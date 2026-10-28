@@ -42,8 +42,9 @@ function LogoutButton() {
 /** Área da conta (Figma: Perfil/Carteiras). No mobile, o menu vira navegação horizontal. */
 export function AccountLayout() {
   return (
-    <div className="grid gap-8 lg:grid-cols-[theme(--container-sidebar)_1fr]">
-      <nav aria-label="Minha conta" className="self-start rounded-sm bg-surface py-4">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[theme(--container-sidebar)_minmax(0,1fr)]">
+      {/* min-w-0: no mobile a rolagem horizontal fica no menu, sem alargar a página. */}
+      <nav aria-label="Minha conta" className="min-w-0 self-start rounded-sm bg-surface py-4">
         <h2 className="px-3 pb-2 text-body-lg font-bold text-foreground">Meu perfil</h2>
         <ul className="flex overflow-x-auto lg:flex-col">
           {LINKS.map((link) => (

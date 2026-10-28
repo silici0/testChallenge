@@ -77,7 +77,8 @@ Funcionalidade: Conta e sessão
     Quando vou para o pagamento
     E preencho "Observação do colecionador (opcional)" com "Entregar na carteira principal"
     E o cenário de simulação muda para "session-expired"
-    E tento conectar a carteira
+    # Recarregar sempre faz uma requisição privada; um refetch em segundo plano pode expirar a sessão antes, com o mesmo resultado.
+    E recarrego a página
     Então estou na tela de login
     E vejo a mensagem "Sua sessão expirou"
     Quando o cenário de simulação muda para "default"

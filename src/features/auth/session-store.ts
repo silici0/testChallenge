@@ -2,6 +2,8 @@ import { safeStorage } from '@/shared/lib/storage'
 
 const TOKEN_KEY = 'auth:token'
 const GUEST_KEY = 'cart:guestId'
+/** Marca de sessão expirada: persiste para o aviso não se perder se o usuário recarregar no meio do redirect. */
+const EXPIRED_KEY = 'auth:expired'
 
 export interface SessionSnapshot {
   token: string | null
@@ -39,6 +41,7 @@ export function createSessionStore() {
     },
     signIn: (token: string, userId: string) => {
       safeStorage.set('local', TOKEN_KEY, token)
+      safeStorage.remove('local', EXPIRED_KEY)
       update({ token, userId })
     },
     setUser: (userId: string | null) => {
@@ -48,6 +51,13 @@ export function createSessionStore() {
       safeStorage.remove('local', TOKEN_KEY)
       update({ token: null, userId: null })
     },
+    markExpired: () => {
+      safeStorage.set('local', EXPIRED_KEY, '1')
+    },
+    clearExpired: () => {
+      safeStorage.remove('local', EXPIRED_KEY)
+    },
+    wasExpired: () => safeStorage.get('local', EXPIRED_KEY) === '1',
     /** Novo carrinho de visitante (após o merge no login ou no logout). */
     rotateGuestCart: () => {
       const guestCartId = newGuestId()

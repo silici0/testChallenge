@@ -4,7 +4,7 @@ import { isScenarioId, type ScenarioId } from './scenarios/definitions'
 import { createMockServer } from './server'
 
 /** Chaves do cliente limpas no reset (`?reset=1`): sessão, carrinho de visitante e checkout. */
-const CLIENT_KEYS = ['auth:token', 'cart:guestId']
+const CLIENT_KEYS = ['auth:token', 'auth:expired', 'cart:guestId']
 const CLIENT_SESSION_PREFIX = 'checkout:'
 
 function clearClientState() {

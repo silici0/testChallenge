@@ -61,6 +61,7 @@ export function createSessionManager({
   return {
     signedIn,
     logout: async () => {
+      store.clearExpired()
       try {
         await logoutRequest()
       } catch {
@@ -68,11 +69,14 @@ export function createSessionManager({
       }
       await signOutLocally()
     },
+    /** Expirou e ainda não houve novo login/logout (persistido): o guard leva o motivo ao login. */
+    hasExpired: () => store.wasExpired(),
     /** Chamado pelo cliente HTTP em SESSION_EXPIRED (uma vez por token). */
     expire: () => {
       const { token } = store.getSnapshot()
       if (!token || expiredTokens.has(token)) return
       expiredTokens.add(token)
+      store.markExpired()
       announce('Sua sessão expirou. Entre novamente para continuar de onde parou.', 'assertive')
       void signOutLocally()
       onExpired()

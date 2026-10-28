@@ -32,4 +32,17 @@ describe('sessionStore', () => {
     expect(listener).toHaveBeenCalledTimes(3)
     expect(localStorage.getItem('auth:token')).toBe('sess_2')
   })
+
+  it('a expiração sobrevive a um refresh e some no próximo login ou ao limpar', () => {
+    const store = createSessionStore()
+    store.signIn('sess_1', 'usr_ana')
+    store.markExpired()
+    store.signOut()
+    expect(createSessionStore().wasExpired()).toBe(true)
+    store.signIn('sess_2', 'usr_ana')
+    expect(createSessionStore().wasExpired()).toBe(false)
+    store.markExpired()
+    store.clearExpired()
+    expect(createSessionStore().wasExpired()).toBe(false)
+  })
 })

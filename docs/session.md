@@ -23,6 +23,8 @@ Decisão: [ADR-0010](adr/0010-sessao-e-autenticacao-simuladas.md).
 
 Checkout, pedidos, perfil, carteiras e favoritos exigem autenticação. Login e cadastro redirecionam usuários autenticados para `redirect` (ou `/`). `redirect` só aceita paths internos (começando com `/`, sem `//`), evitando open redirect.
 
+Quando a sessão expira, o cliente grava a marca `auth:expired` no `localStorage`, que é limpa no próximo login ou logout. O guard das rotas privadas inclui `reason=expired` sempre que essa marca existe. Sem isso, o aviso se perdia em duas corridas: na primeira, ao recarregar com a sessão vencida, o redirect do guard concorria com o do `session.expire()`; na segunda, o usuário recarregava depois que a aba já tinha apagado o token, mas antes de ela navegar para o login.
+
 Cada rota privada declara `staticData: { requiresAuth: true }` junto do guard. Se o visitante fechar o modal de login ou cadastro, ele volta ao `redirect` apenas quando esse destino é público. Quando o destino é privado, vai para a Início, porque voltar à rota privada faria o guard reabrir o login em loop.
 
 ## Expiração
