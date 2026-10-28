@@ -23,6 +23,8 @@ for (const story of stories) {
     const root = page.locator('#storybook-root')
     await expect(root).toBeVisible()
     await page.evaluate(async () => {
+      // O play de algumas stories deixa foco: o anel de foco não entra na captura (antialiasing instável).
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
       await document.fonts.ready
       await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined)))
     })

@@ -77,6 +77,8 @@ export default defineConfig({
           name: 'integration',
           include: ['src/**/*.browser.test.{ts,tsx}'],
           setupFiles: ['src/test/setup.browser.ts'],
+          // Mesma origem = localStorage e service worker do MSW compartilhados: arquivos em série.
+          fileParallelism: false,
           browser: { enabled: true, headless: true, provider: playwright(), instances: [{ browser: 'chromium' }] },
         },
       },
