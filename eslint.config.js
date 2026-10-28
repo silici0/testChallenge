@@ -105,6 +105,11 @@ export default tseslint.config(
     rules: { 'max-lines-per-function': 'off', '@typescript-eslint/no-non-null-assertion': 'off' },
   },
   {
+    // A assinatura dos steps BDD é definida pelo Gherkin (fixtures + um parâmetro por placeholder).
+    files: ['tests/e2e/steps/**'],
+    rules: { 'max-params': 'off' },
+  },
+  {
     files: ['*.config.{js,mjs,ts}', '.storybook/**', 'tests/**', 'scripts/**'],
     languageOptions: { globals: { ...globals.node } },
   },

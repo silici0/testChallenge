@@ -5,6 +5,7 @@ import { setupWorker } from 'msw/browser'
 import { createApp } from '@/app/bootstrap'
 import { sessionStore } from '@/features/auth/session-store'
 import { createMockServer, type MockServer } from '@/mocks/server'
+import { announcer } from '@/shared/a11y'
 
 let worker: ReturnType<typeof setupWorker> | null = null
 let server: MockServer | null = null
@@ -32,6 +33,7 @@ export async function renderApp(path: string) {
   await fetch('/__mock/reset', { method: 'POST', body: '{}' })
   localStorage.clear()
   sessionStore.signOut()
+  announcer.reset()
   const app = createApp({ history: createMemoryHistory({ initialEntries: [path] }) })
   const view = render(app.element)
   return {

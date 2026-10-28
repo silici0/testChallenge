@@ -43,7 +43,7 @@ When('volto no histórico do navegador', async ({ page }) => {
 })
 
 When('clico em {string}', async ({ page }, name: string) => {
-  await page.getByRole('button', { name }).click()
+  await page.getByRole('button', { name, exact: true }).click()
 })
 
 Then('vejo o título {string}', async ({ page }, title: string) => {

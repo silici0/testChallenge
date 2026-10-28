@@ -1,4 +1,5 @@
 export * from './badge'
+export * from './breadcrumb'
 export * from './button'
 export * from './eth-amount'
 export * from './icon'

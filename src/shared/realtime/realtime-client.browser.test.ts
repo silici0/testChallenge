@@ -9,10 +9,12 @@ import { createRealtimeClient } from './realtime-client'
 
 const origin = `ws://${location.host}`
 const subscriptions: unknown[] = []
+const handshakeTokens: (string | null)[] = []
 const servers = new Set<{ emit: (type: string, payload: unknown) => void; close: () => void }>()
 
 const worker = setupWorker(
   ws.link(origin).addEventListener('connection', (connection) => {
+    handshakeTokens.push(connection.client.url.searchParams.get('token'))
     const io = toSocketIo(connection)
     const server = {
       emit: (type: string, payload: unknown) => io.client.emit(type, payload),
@@ -82,4 +84,25 @@ it('conecta, valida eventos pelo contrato, reassina NFTs e reconcilia após reco
   unsubscribe()
   client.disconnect()
   expect(client.getStatus()).toBe('idle')
+})
+
+it('reconexão após troca de sessão abre nova conexão com o novo token (sem reaproveitar o Manager)', async () => {
+  let token = 'sess_ana'
+  const client = createRealtimeClient({
+    url: location.origin,
+    path: '/socket.io',
+    loadIo: () => import('socket.io-client'),
+    getToken: () => token,
+    onEvent: () => undefined,
+    onReconnect: () => undefined,
+  })
+  handshakeTokens.length = 0
+  await client.connect()
+  await until(() => client.getStatus() === 'connected')
+
+  token = 'sess_bruno'
+  await client.reconnect()
+  await until(() => client.getStatus() === 'connected' && handshakeTokens.length >= 2)
+  expect(handshakeTokens).toEqual(['sess_ana', 'sess_bruno'])
+  client.disconnect()
 })

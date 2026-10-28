@@ -59,16 +59,16 @@ A entrega roda a partir de um checkout limpo, sem serviços privados nem backend
 
 Arquivo `.env.example` versionado. Todas são públicas (prefixo `VITE_`) — não há segredos.
 
-| Variável                     | Padrão                  | Descrição                                                                       |
-| ---------------------------- | ----------------------- | ------------------------------------------------------------------------------- |
-| `VITE_ENABLE_MOCKS`          | `true`                  | Ativa MSW (REST + Socket.IO). Também `true` no build de demonstração publicado. |
-| `VITE_API_BASE_URL`          | `/api/v1`               | Base das chamadas REST feitas pelo Axios.                                       |
-| `VITE_SOCKET_URL`            | `http://localhost:5173` | Origem do Socket.IO; com mocks, interceptada pelo MSW.                          |
-| `VITE_SOCKET_PATH`           | `/socket.io`            | Path do Socket.IO.                                                              |
-| `VITE_REQUEST_TIMEOUT_MS`    | `8000`                  | Timeout do Axios. Usado nos cenários de timeout de pedido.                      |
-| `VITE_MOCK_DEFAULT_SCENARIO` | `default`               | Cenário carregado quando nenhum outro foi selecionado.                          |
-| `VITE_MOCK_PERSIST`          | `true`                  | Persiste o banco simulado em `localStorage` para sobreviver a refresh.          |
-| `VITE_MOCK_PANEL`            | `true`                  | Exibe o painel de cenários (botão flutuante).                                   |
+| Variável                     | Padrão       | Descrição                                                                                                                                   |
+| ---------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_ENABLE_MOCKS`          | `true`       | Ativa MSW (REST + Socket.IO). Também `true` no build de demonstração publicado.                                                             |
+| `VITE_API_BASE_URL`          | `/api/v1`    | Base das chamadas REST feitas pelo Axios.                                                                                                   |
+| `VITE_SOCKET_URL`            | _(vazio)_    | Origem do Socket.IO. Vazio = mesma origem da página (recomendado para dev, preview e deploy); com mocks, a conexão é interceptada pelo MSW. |
+| `VITE_SOCKET_PATH`           | `/socket.io` | Path do Socket.IO.                                                                                                                          |
+| `VITE_REQUEST_TIMEOUT_MS`    | `8000`       | Timeout do Axios. Usado nos cenários de timeout de pedido.                                                                                  |
+| `VITE_MOCK_DEFAULT_SCENARIO` | `default`    | Cenário carregado quando nenhum outro foi selecionado.                                                                                      |
+| `VITE_MOCK_PERSIST`          | `true`       | Persiste o banco simulado em `localStorage` para sobreviver a refresh.                                                                      |
+| `VITE_MOCK_PANEL`            | `true`       | Exibe o painel de cenários (botão flutuante).                                                                                               |
 
 ## 4. Credenciais fictícias
 

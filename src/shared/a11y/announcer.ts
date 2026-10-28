@@ -23,6 +23,11 @@ function createAnnouncer() {
       for (const listener of listeners) listener()
     },
     getSnapshot: () => state,
+    /** Limpa as regiões (nova montagem do app; isolamento entre testes). */
+    reset: () => {
+      state = { polite: null, assertive: null }
+      for (const listener of listeners) listener()
+    },
     subscribe: (listener: Listener) => {
       listeners.add(listener)
       return () => {
