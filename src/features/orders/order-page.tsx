@@ -64,6 +64,7 @@ export function OrderPage() {
   if (order.isError && isApiError(order.error) && order.error.is('NOT_FOUND', 'FORBIDDEN')) {
     return (
       <EmptyState
+        titleAs="h1"
         title="Pedido não encontrado"
         action={
           <Button asChild variant="outline">

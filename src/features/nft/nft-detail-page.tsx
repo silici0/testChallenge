@@ -164,6 +164,7 @@ export function NftDetailPage() {
   if (query.isError && isApiError(query.error) && query.error.is('NOT_FOUND')) {
     return (
       <EmptyState
+        titleAs="h1"
         title="NFT não encontrado"
         description="Ele pode ter sido removido ou o endereço está incorreto."
         action={

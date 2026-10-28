@@ -5,6 +5,11 @@ import { describe, expect, it, vi } from 'vitest'
 import { EmptyState, ErrorState } from './state'
 
 describe('EmptyState / ErrorState', () => {
+  it('título como h1 quando o estado substitui a página', () => {
+    render(<EmptyState titleAs="h1" title="Página não encontrada." />)
+    expect(screen.getByRole('heading', { level: 1, name: 'Página não encontrada.' })).toBeInTheDocument()
+  })
+
   it('estado vazio mostra título, descrição e ação', () => {
     render(
       <EmptyState

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useMemo, useRef, useState } from 'react'
 
-import { type Buyer, buyerSchema, type Quote, type User } from '@/contracts'
+import { type Buyer, buyerSchema, type Quote, type User, type Wallet } from '@/contracts'
 import { useCart } from '@/features/cart/use-cart'
 import { useNftSubscription } from '@/features/nft/use-nft-subscription'
 import { walletsQuery } from '@/features/wallets/api'
@@ -57,6 +57,12 @@ function useWalletSelection(userId: string) {
     error: walletErrorMessage(mutations.connect.error),
   }
 }
+const WALLET_REQUIRED = 'Conecte uma carteira para continuar.'
+
+/** O aviso de carteira some assim que ela conecta, sem exigir outro clique em “Revisar pedido”. */
+const visibleReviewError = (error: string | undefined, wallet: Wallet | undefined) =>
+  error === WALLET_REQUIRED && wallet?.connection === 'connected' ? undefined : error
+
 export type WalletSelection = ReturnType<typeof useWalletSelection>
 
 /**
@@ -92,7 +98,7 @@ export function useCheckoutFlow(user: User) {
     const values = await buyerForm.current?.validate()
     if (!values) return
     if (selection.wallet?.connection !== 'connected') {
-      setReviewError('Conecte uma carteira para continuar.')
+      setReviewError(WALLET_REQUIRED)
       return
     }
     if (!quote.data?.items.length) {
@@ -121,7 +127,7 @@ export function useCheckoutFlow(user: User) {
     registerBuyerForm,
     buyer,
     reviewed,
-    reviewError,
+    reviewError: visibleReviewError(reviewError, selection.wallet),
     changes,
     hasItems,
     saveDraft,

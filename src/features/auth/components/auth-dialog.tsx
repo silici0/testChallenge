@@ -49,7 +49,10 @@ export function AuthDialog({ mode, description, redirect, onClose, children }: A
             Criar conta
           </Link>
         </nav>
-        <DialogTitle className="sr-only">{mode === 'login' ? 'Entrar na Kurio' : 'Criar conta na Kurio'}</DialogTitle>
+        {/* A rota de autenticação é uma página: o título do modal é o seu h1. */}
+        <DialogTitle asChild>
+          <h1 className="sr-only">{mode === 'login' ? 'Entrar na Kurio' : 'Criar conta na Kurio'}</h1>
+        </DialogTitle>
         <DialogDescription className="text-center text-label text-foreground">{description}</DialogDescription>
         {children}
         <div className="flex flex-col gap-3 border-t border-border-soft pt-5">

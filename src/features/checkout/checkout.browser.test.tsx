@@ -58,6 +58,10 @@ describe('Pagamento (app real + servidor simulado)', () => {
     await screen.findByRole('button', { name: 'Conectar MetaMask' }, { timeout: 5000 })
     await userEvent.click(screen.getByRole('button', { name: 'Revisar pedido' }))
     expect(await screen.findByText('Conecte uma carteira para continuar.')).toBeInTheDocument()
+    // Regressão: o aviso não pode continuar na tela depois que a carteira conecta.
+    await userEvent.click(screen.getByRole('button', { name: 'Conectar MetaMask' }))
+    expect(await screen.findByText('Conectada')).toBeInTheDocument()
+    expect(screen.queryByText('Conecte uma carteira para continuar.')).not.toBeInTheDocument()
   })
 
   it('conexão recusada pela carteira (simulada)', async () => {

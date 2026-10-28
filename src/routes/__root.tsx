@@ -20,6 +20,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function NotFound() {
   return (
     <EmptyState
+      titleAs="h1"
       title="Página não encontrada."
       description="O endereço pode ter mudado ou não existir."
       action={

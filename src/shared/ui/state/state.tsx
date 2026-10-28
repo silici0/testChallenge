@@ -10,6 +10,8 @@ interface StateProps {
   description?: string
   action?: ReactNode
   className?: string
+  /** Use `h1` quando o estado substitui a página inteira (ex.: não encontrado): toda página tem um título. */
+  titleAs?: 'p' | 'h1' | 'h2'
 }
 
 function StateLayout({
@@ -19,6 +21,7 @@ function StateLayout({
   action,
   className,
   role,
+  titleAs: Title = 'p',
 }: StateProps & { icon: IconName; role?: 'alert' }) {
   return (
     <div
@@ -26,7 +29,7 @@ function StateLayout({
       className={cn('flex flex-col items-center gap-3 rounded-xl bg-surface px-6 py-12 text-center', className)}
     >
       <Icon name={icon} size={32} className="text-primary" />
-      <p className="text-title font-bold text-foreground">{title}</p>
+      <Title className="text-title font-bold text-foreground">{title}</Title>
       {description && <p className="max-w-md text-label text-foreground-secondary">{description}</p>}
       {action}
     </div>
