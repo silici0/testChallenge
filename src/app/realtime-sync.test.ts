@@ -89,6 +89,15 @@ describe('createRealtimeSync', () => {
     expect(announce).toHaveBeenCalledWith(expect.stringContaining('Emerald Ape #042'), 'polite')
   })
 
+  it('carrinho de visitante também é atualizado e anunciado', () => {
+    const { queryClient, sync, announce } = setup(null)
+    const guestKey = queryKeys.guestCart('guest_1')
+    queryClient.setQueryData(guestKey, { items: [{ nftId: NFT, nft: { name: 'Emerald Ape #042' } }] })
+    sync.handle(nftUpdated('evt_guest', 2))
+    expect(queryClient.getQueryState(guestKey)?.isInvalidated).toBe(true)
+    expect(announce).toHaveBeenCalledWith(expect.stringContaining('Emerald Ape #042'), 'polite')
+  })
+
   it('versão vinda do REST bloqueia evento mais antigo', () => {
     const { queryClient, sync } = setup()
     sync.recordRestVersions()

@@ -73,3 +73,7 @@ When(
     await mock.updateNft(nftId, { editionId, priceEth })
   },
 )
+
+Then('vejo o item {string} no carrinho', async ({ page }, name: string) => {
+  await expect(line(page, name)).toBeVisible()
+})

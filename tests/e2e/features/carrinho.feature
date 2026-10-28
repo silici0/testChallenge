@@ -35,3 +35,9 @@ Funcionalidade: Carrinho de NFTs
     Quando o preço da edição "ed_emerald-ape-042_aberta" do NFT "nft_emerald-ape-042" muda para "9.99"
     Então vejo a mensagem "Preço alterado"
     E o resumo mostra subtotal igual à soma das linhas
+
+  @main
+  Cenário: Itens do visitante são preservados ao entrar
+    Quando entro pela página de login com "bruno@example.test" e senha "Jungle#2026"
+    E navego para "/cart"
+    Então vejo o item "Emerald Ape #042" no carrinho

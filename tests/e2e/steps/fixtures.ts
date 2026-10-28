@@ -6,6 +6,8 @@ export class MockControl {
   constructor(private readonly page: Page) {}
 
   private async call(method: string, path: string, body?: unknown) {
+    // O app só monta depois de startMocks(): a partir daí o MSW intercepta /__mock/*.
+    await this.page.locator('[data-realtime-status]').waitFor({ state: 'attached' })
     const status = await this.page.evaluate(
       async ({ method, path, body }) =>
         (await fetch(path, { method, body: body === undefined ? null : JSON.stringify(body) })).status,

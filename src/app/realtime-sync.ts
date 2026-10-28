@@ -38,8 +38,6 @@ const applyNftToSummary = <T extends Pick<NftSummary, 'id' | 'version' | 'priceF
  * A API REST continua sendo a fonte de verdade: eventos aceleram, a reconciliação corrige lacunas.
  */
 export function createRealtimeSync({ queryClient, gate, getUserId, announce }: RealtimeSyncOptions) {
-  const userCart = (userId: string) => queryClient.getQueryData<Cart>(queryKeys.user.cart(userId))
-
   function onNftUpdated(event: NftUpdatedEvent) {
     const detailKey = queryKeys.nfts.detail(event.resource.id)
     queryClient.setQueryData<NftDetail>(detailKey, (detail) => {
@@ -54,13 +52,18 @@ export function createRealtimeSync({ queryClient, gate, getUserId, announce }: R
       data && 'items' in data ? { ...data, items: data.items.map((item) => applyNftToSummary(item, event)) } : data,
     )
 
+    // Carrinho do usuário ou do visitante: os dois refletem a mudança (enunciado §3.2).
     const userId = getUserId()
-    const cartItem = userId ? userCart(userId)?.items.find((item) => item.nftId === event.resource.id) : undefined
-    if (userId && cartItem) {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.user.cart(userId) })
-      void queryClient.invalidateQueries({ queryKey: [...queryKeys.user.scope(userId), 'quote'] })
-      announce(`${cartItem.nft.name} teve preço ou disponibilidade alterados. O resumo foi atualizado.`, 'polite')
-    }
+    const carts = [
+      ...queryClient.getQueriesData<Cart>({ queryKey: ['cart', 'guest'] }),
+      ...(userId ? queryClient.getQueriesData<Cart>({ queryKey: queryKeys.user.cart(userId) }) : []),
+    ]
+    const affected = carts.filter(([, cart]) => cart?.items.some((item) => item.nftId === event.resource.id))
+    const cartItem = affected[0]?.[1]?.items.find((item) => item.nftId === event.resource.id)
+    if (!cartItem) return
+    for (const [key] of affected) void queryClient.invalidateQueries({ queryKey: key })
+    if (userId) void queryClient.invalidateQueries({ queryKey: [...queryKeys.user.scope(userId), 'quote'] })
+    announce(`${cartItem.nft.name} teve preço ou disponibilidade alterados. O resumo foi atualizado.`, 'polite')
   }
 
   function onOrderUpdated(event: OrderUpdatedEvent, userId: string) {

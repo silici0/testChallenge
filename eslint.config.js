@@ -51,6 +51,11 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
       '@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
+      // TanStack Router: `throw redirect()` / `throw notFound()` é o mecanismo oficial de navegação em guards.
+      '@typescript-eslint/only-throw-error': [
+        'error',
+        { allow: [{ from: 'package', package: '@tanstack/router-core', name: ['Redirect', 'NotFoundError'] }] },
+      ],
       // Mocks só podem ser carregados pelo bootstrap (ADR-0006)
       'no-restricted-imports': [
         'error',

@@ -22,6 +22,12 @@ for (const story of stories) {
     await page.goto(`/iframe.html?id=${story.id}&viewMode=story`)
     const root = page.locator('#storybook-root')
     await expect(root).toBeVisible()
+    // Aguarda o Storybook concluir render, play e afterEach (o play de algumas stories digita/clica).
+    await page.waitForFunction(() => {
+      const preview = (window as unknown as { __STORYBOOK_PREVIEW__?: { currentRender?: { phase?: string } } })
+        .__STORYBOOK_PREVIEW__
+      return preview?.currentRender?.phase === 'finished'
+    })
     await page.evaluate(async () => {
       // O play de algumas stories deixa foco: o anel de foco não entra na captura (antialiasing instável).
       if (document.activeElement instanceof HTMLElement) document.activeElement.blur()

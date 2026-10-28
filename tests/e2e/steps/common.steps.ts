@@ -55,7 +55,8 @@ Then('vejo a mensagem {string}', async ({ page }, message: string) => {
 })
 
 Then('vejo o alerta {string}', async ({ page }, message: string) => {
-  await expect(page.getByRole('alert').filter({ hasText: message })).toBeVisible()
+  // A mesma mensagem pode estar na tela e na região aria-live: basta uma visível.
+  await expect(page.getByRole('alert').filter({ hasText: message }).first()).toBeVisible()
 })
 
 Then('vejo o indicador {string}', async ({ page }, text: string) => {
