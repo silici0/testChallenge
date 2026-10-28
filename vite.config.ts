@@ -38,6 +38,7 @@ export default defineConfig({
         'src/**/*.generated.ts',
         'src/routeTree.gen.ts',
         'src/mocks/**',
+        'src/test/**',
         'src/main.tsx',
         // Composição pura (sem regra própria): coberta pelo E2E.
         'src/app/bootstrap.tsx',
@@ -75,6 +76,7 @@ export default defineConfig({
         test: {
           name: 'integration',
           include: ['src/**/*.browser.test.{ts,tsx}'],
+          setupFiles: ['src/test/setup.browser.ts'],
           browser: { enabled: true, headless: true, provider: playwright(), instances: [{ browser: 'chromium' }] },
         },
       },

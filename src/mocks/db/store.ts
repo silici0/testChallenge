@@ -12,7 +12,8 @@ export interface KeyValueStorage {
 
 type Listener = (event: RealtimeEvent) => void
 
-const STORAGE_KEY = 'mock:db:v1'
+// Incrementar quando fixtures ou schema mudarem: estados persistidos antigos são descartados.
+const STORAGE_KEY = 'mock:db:v2'
 
 /**
  * Banco do servidor simulado: estado em memória, persistência opcional (refresh) e barramento de eventos.

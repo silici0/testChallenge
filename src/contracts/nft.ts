@@ -30,17 +30,19 @@ export const categoryLabels: Record<Category, string> = {
 export const sortSchema = z.enum(['recent', 'price-asc', 'price-desc', 'name-asc', 'popular'])
 export const tabSchema = z.enum(['all', 'new', 'trending'])
 
-const toArray = (value: unknown): unknown[] => {
-  if (value === undefined) return []
-  return Array.isArray(value) ? (value as unknown[]) : [value]
-}
+/** Aceita valor único ou lista (query string repetida) e normaliza para lista; ausente → []. */
+const multiValue = <T extends z.ZodType<string>>(item: T) =>
+  z
+    .union([z.array(item), item.transform((value) => [value])])
+    .default([])
+    .catch([])
 
 /** Parâmetros do catálogo — mesmo schema valida a URL (TanStack Router) e a query da API. */
 export const nftListParamsSchema = z.object({
   q: z.string().trim().min(1).optional().catch(undefined),
   tab: tabSchema.catch('all').default('all'),
-  category: z.preprocess(toArray, z.array(categorySchema)).catch([]),
-  network: z.preprocess(toArray, z.array(networkSchema)).catch([]),
+  category: multiValue(categorySchema),
+  network: multiValue(networkSchema),
   collection: z.string().optional().catch(undefined),
   priceMin: ethSchema.optional().catch(undefined),
   priceMax: ethSchema.optional().catch(undefined),

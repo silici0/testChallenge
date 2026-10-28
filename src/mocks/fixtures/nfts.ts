@@ -77,10 +77,10 @@ function pick<T>(list: readonly T[], index: number): T {
 }
 
 const image = (artwork: string, alt: string): Image => ({
-  url: `/images/nfts/${artwork}.png`,
+  url: `/images/nfts/${artwork}.webp`,
   alt,
-  width: 1254,
-  height: 1254,
+  width: 1024,
+  height: 1024,
 })
 
 function buildNames(): string[] {

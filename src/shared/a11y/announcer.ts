@@ -1,4 +1,5 @@
 export type Politeness = 'polite' | 'assertive'
+export type Announce = (message: string, politeness: Politeness) => void
 
 interface Announcement {
   id: number

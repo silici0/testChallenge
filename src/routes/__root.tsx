@@ -1,9 +1,12 @@
-import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
+import { createRootRouteWithContext, HeadContent, Outlet } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useSyncExternalStore } from 'react'
 
 import type { RouterContext } from '@/app/router'
 import { sessionQuery } from '@/features/auth/api'
+import { SiteShell } from '@/features/layout/site-shell'
 import { LiveRegions } from '@/shared/a11y'
+import { Button, EmptyState } from '@/shared/ui'
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   // A sessão é resolvida antes de qualquer rota (guards de rotas privadas dependem dela).
@@ -11,29 +14,46 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     user: await context.queryClient.query({ ...sessionQuery(), staleTime: 'static' }),
   }),
   component: RootLayout,
-  notFoundComponent: () => <p className="p-gutter text-body">Página não encontrada.</p>,
+  notFoundComponent: NotFound,
 })
+
+function NotFound() {
+  return (
+    <EmptyState
+      title="Página não encontrada."
+      description="O endereço pode ter mudado ou não existir."
+      action={
+        <Button asChild variant="outline">
+          <Link to="/">Voltar ao início</Link>
+        </Button>
+      }
+    />
+  )
+}
 
 function RealtimeStatus() {
   const { realtime } = Route.useRouteContext()
   const status = useSyncExternalStore(realtime.subscribeStatus, realtime.getStatus)
-  const label = status === 'connected' ? 'Tempo real conectado' : 'Tempo real desconectado'
+  const connected = status === 'connected'
   return (
-    <p className="text-caption-sm text-foreground-muted" data-realtime-status={status}>
-      <span aria-hidden="true" className={status === 'connected' ? 'text-success' : 'text-danger-text'}>
+    <p className="pb-4 text-center text-caption-sm text-foreground-muted" data-realtime-status={status}>
+      <span aria-hidden="true" className={connected ? 'text-success' : 'text-danger-text'}>
         ●
       </span>{' '}
-      {label}
+      {connected ? 'Tempo real conectado' : 'Tempo real desconectado'}
     </p>
   )
 }
 
 function RootLayout() {
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-page px-gutter">
-      <Outlet />
+    <>
+      <HeadContent />
+      <SiteShell>
+        <Outlet />
+      </SiteShell>
       <RealtimeStatus />
       <LiveRegions />
-    </div>
+    </>
   )
 }

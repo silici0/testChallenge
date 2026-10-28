@@ -86,7 +86,7 @@ export default tseslint.config(
   },
   {
     // Testes podem montar o servidor simulado; código de aplicação não (ADR-0006).
-    files: ['src/main.tsx', 'src/mocks/**', 'src/**/*.test.{ts,tsx}'],
+    files: ['src/main.tsx', 'src/mocks/**', 'src/test/**', 'src/**/*.test.{ts,tsx}'],
     rules: { 'no-restricted-imports': 'off' },
   },
   {

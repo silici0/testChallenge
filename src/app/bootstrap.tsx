@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query'
-import { RouterProvider } from '@tanstack/react-router'
+import { type RouterHistory, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
@@ -17,9 +17,9 @@ import { createSessionManager } from './session-manager'
 
 /**
  * Composição do app (inversão de dependência): cada peça recebe suas dependências aqui.
- * Importado dinamicamente por main.tsx somente depois de o MSW estar ativo (ADR-0024).
+ * `history` permite montar o app real em testes de integração (histórico em memória).
  */
-export function mountApp(container: HTMLElement) {
+export function createApp({ history }: { history?: RouterHistory } = {}) {
   const queryClient = createQueryClient()
   const gate = createEventGate()
   const sync = createRealtimeSync({ queryClient, gate, getUserId: () => sessionStore.getSnapshot().userId, announce })
@@ -56,16 +56,27 @@ export function mountApp(container: HTMLElement) {
     }),
   )
 
-  const router = createAppRouter({ queryClient, session, realtime })
+  const router = createAppRouter({ queryClient, session, realtime }, history)
   routerRef.current = router
-  sync.recordRestVersions()
+  const stopVersionTracking = sync.recordRestVersions()
   void realtime.connect()
 
-  createRoot(container).render(
+  const element = (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
-    </StrictMode>,
+    </StrictMode>
   )
+  const dispose = () => {
+    stopVersionTracking()
+    realtime.disconnect()
+    queryClient.clear()
+  }
+  return { element, router, queryClient, session, dispose }
+}
+
+/** Importado dinamicamente por main.tsx somente depois de o MSW estar ativo (ADR-0024). */
+export function mountApp(container: HTMLElement) {
+  createRoot(container).render(createApp().element)
 }
