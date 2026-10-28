@@ -71,3 +71,16 @@ Funcionalidade: Conta e sessão
       | %2Fcheckout                |
       | %2Forders%2Ford_qualquer   |
 
+  Cenário: Sessão expira no pagamento e o rascunho é retomado após o login
+    Dado que estou autenticado como "ana@example.test"
+    E tenho 1 unidades de "Emerald Ape #042" no carrinho
+    Quando vou para o pagamento
+    E preencho "Observação do colecionador (opcional)" com "Entregar na carteira principal"
+    E o cenário de simulação muda para "session-expired"
+    E tento conectar a carteira
+    Então estou na tela de login
+    E vejo a mensagem "Sua sessão expirou"
+    Quando o cenário de simulação muda para "default"
+    E entro com "ana@example.test" e senha "Jungle#2026"
+    Então vejo o título "Pagamento"
+    E o campo "Observação do colecionador (opcional)" contém "Entregar na carteira principal"

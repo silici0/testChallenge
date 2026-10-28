@@ -24,3 +24,13 @@ Funcionalidade: Tempo real durante o checkout
     Quando a edição "ed_emerald-ape-042_aberta" do NFT "nft_emerald-ape-042" fica com 0 unidades
     Então vejo o alerta "A cotação mudou desde a sua revisão"
     E a confirmação está bloqueada
+
+  Cenário: Carteira desconecta durante a revisão e bloqueia a confirmação
+    Dado que estou autenticado como "ana@example.test"
+    E tenho 1 unidades de "Emerald Ape #042" no carrinho
+    E o cenário de simulação muda para "wallet-disconnect"
+    Quando vou para o pagamento
+    E conecto a carteira
+    E reviso o pedido
+    Então depois vejo a mensagem "A carteira foi desconectada. Volte e conecte-a para confirmar."
+    E a confirmação está bloqueada

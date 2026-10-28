@@ -27,3 +27,13 @@ Funcionalidade: Falhas de pagamento
     E concluo a compra
     Então depois vejo o pedido aguardando confirmação
     E existe exatamente 1 pedido novo
+
+  Cenário: Conexão recusada pela carteira mantém o pagamento bloqueado
+    Dado que estou autenticado como "ana@example.test"
+    E tenho 1 unidades de "Emerald Ape #042" no carrinho
+    E o cenário de simulação muda para "wallet-rejected"
+    Quando vou para o pagamento
+    E tento conectar a carteira
+    Então vejo o alerta "A conexão foi recusada na carteira"
+    Quando clico em "Revisar pedido"
+    Então vejo o alerta "Conecte uma carteira para continuar."

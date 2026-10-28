@@ -86,3 +86,33 @@ Then('a página não tem rolagem horizontal', async ({ page }) => {
   )
   expect(overflow).toBe(0)
 })
+
+/** UnavailableAction (enunciado §3): focável, `aria-disabled`, descrição “Indisponível na demonstração”, sem efeito. */
+Then('as ações indisponíveis declaram a indisponibilidade e não fazem nada', async ({ page }) => {
+  await expect(page.getByRole('heading', { level: 1 })).toBeAttached()
+  // Com um diálogo aberto, o resto da página é inerte: só as ações do diálogo estão disponíveis ao usuário.
+  const dialog = page.getByRole('dialog')
+  const scope = (await dialog.count()) > 0 ? dialog : page.locator('body')
+  const actions = scope.locator('button[aria-disabled="true"]').filter({ visible: true })
+  const unavailable = []
+  for (const action of await actions.all()) {
+    const description = await action.evaluate((element) =>
+      (element.getAttribute('aria-describedby') ?? '')
+        .split(' ')
+        .map((id) => document.getElementById(id)?.textContent ?? '')
+        .join(' '),
+    )
+    if (description.includes('Indisponível na demonstração')) unavailable.push(action)
+  }
+  expect(unavailable.length).toBeGreaterThan(0)
+
+  const apiCalls: string[] = []
+  page.on('request', (request) => {
+    if (request.url().includes('/api/')) apiCalls.push(request.url())
+  })
+  const url = page.url()
+  for (const action of unavailable) await action.click({ force: true })
+  await page.waitForTimeout(300)
+  expect(page.url()).toBe(url)
+  expect(apiCalls).toEqual([])
+})

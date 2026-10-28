@@ -124,3 +124,8 @@ Then('o preço unitário de {string} se mantém em {string} ETH', async ({ page 
   await page.waitForTimeout(1500)
   await expect(unit).toHaveAttribute('value', price)
 })
+
+// Sem esperar “Conectada”: o resultado (recusa, expiração) é verificado pelos passos seguintes.
+When('tento conectar a carteira', async ({ page }) => {
+  await page.getByRole('button', { name: /^Conectar / }).click()
+})

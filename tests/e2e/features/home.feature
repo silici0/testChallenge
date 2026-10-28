@@ -14,3 +14,9 @@ Funcionalidade: Página inicial
   Cenário: Rota inexistente
     Dado que acesso a rota "/rota-que-nao-existe"
     Então vejo a mensagem "Página não encontrada."
+
+  Cenário: Ações fora do escopo não simulam sucesso
+    Dado que acesso a página inicial
+    Então as ações indisponíveis declaram a indisponibilidade e não fazem nada
+    Quando navego para "/login"
+    Então as ações indisponíveis declaram a indisponibilidade e não fazem nada
