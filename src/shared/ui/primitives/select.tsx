@@ -45,7 +45,8 @@ function SelectTrigger({
 function SelectContent({
   className,
   children,
-  position = 'item-aligned',
+  // popper: lista ancorada ao gatilho; item-aligned reposiciona e rola em telas pequenas (instável no toque).
+  position = 'popper',
   align = 'center',
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
