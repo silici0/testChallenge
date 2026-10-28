@@ -2,14 +2,14 @@
 
 **Kurio**: implementação do [Desafio Frontend — Marketplace de NFTs](https://github.com/junglegaming/frontend-challenge) em React + TypeScript, seguindo o [layout no Figma](https://www.figma.com/design/Ff0SksUi7UFtPWUO8kyNtw/Frontend-Challenge?node-id=0-1).
 
-> **Status:** fundação pronta: tokens, design system com Storybook, testes unitários, de story, visuais e BDD, e pipeline de qualidade. As telas e a camada de dados estão em desenvolvimento. O que já foi entregue está marcado em [`docs/requirements-traceability.md`](docs/requirements-traceability.md).
+> **Status:** todas as telas do enunciado estão implementadas sobre a API e o Socket.IO simulados, com testes unitários, de integração, de story, visuais (componentes e páginas) e BDD nos 3 viewports, além da medição Lighthouse. O mapa requisito → evidência está em [`docs/requirements-traceability.md`](docs/requirements-traceability.md).
 
-|                                                            |                                      |
-| ---------------------------------------------------------- | ------------------------------------ |
-| Repositório                                                | _a definir_                          |
-| Deploy público (Vercel)                                    | _a definir_                          |
-| Arquitetura, limitações, decisões de UX e desvios do Figma | [`ARCHITECTURE.md`](ARCHITECTURE.md) |
-| Decisões registradas                                       | [`docs/adr/`](docs/adr/README.md)    |
+|                                                            |                                          |
+| ---------------------------------------------------------- | ---------------------------------------- |
+| Repositório                                                | https://github.com/silici0/testChallenge |
+| Deploy público (Vercel)                                    | https://testchallenge-one.vercel.app/    |
+| Arquitetura, limitações, decisões de UX e desvios do Figma | [`ARCHITECTURE.md`](ARCHITECTURE.md)     |
+| Decisões registradas                                       | [`docs/adr/`](docs/adr/README.md)        |
 
 ---
 
@@ -201,7 +201,7 @@ Gera `docs/performance/reports/<data>/` com HTML/JSON de cada execução e `summ
 
 ## 10. Deploy
 
-Vercel, preset Vite, `VITE_ENABLE_MOCKS=true`. `vercel.json` reescreve qualquer rota para `index.html` (acesso direto e refresh), preservando `mockServiceWorker.js` e assets estáticos. Detalhes: [ADR-0016](docs/adr/0016-deploy-vercel-com-mocks.md).
+Vercel, preset Vite, publicado da branch `main` em https://testchallenge-one.vercel.app/. Os mocks ficam ativos sem variável de ambiente (`VITE_ENABLE_MOCKS` só desliga quando vale `false`), e nenhuma variável secreta é necessária. `vercel.json` reescreve qualquer rota para `index.html` (acesso direto e refresh), preservando `mockServiceWorker.js` e assets estáticos. Detalhes: [ADR-0016](docs/adr/0016-deploy-vercel-com-mocks.md).
 
 ## 11. Documentação
 
