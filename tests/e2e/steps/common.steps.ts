@@ -63,6 +63,11 @@ Then('vejo o indicador {string}', async ({ page }, text: string) => {
   await expect(page.getByText(text)).toBeVisible()
 })
 
+// Reconexão do Socket.IO com backoff (até 5 s + 50 % de aleatoriedade).
+Then('depois vejo o indicador {string}', async ({ page }, text: string) => {
+  await expect(page.getByText(text)).toBeVisible({ timeout: 15_000 })
+})
+
 Then('vejo o indicador de carregamento {string}', async ({ page }, text: string) => {
   await expect(page.getByRole('status').filter({ hasText: text })).toBeAttached()
 })

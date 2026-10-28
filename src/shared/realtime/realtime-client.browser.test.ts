@@ -11,9 +11,15 @@ const origin = `ws://${location.host}`
 const subscriptions: unknown[] = []
 const handshakeTokens: (string | null)[] = []
 const servers = new Set<{ emit: (type: string, payload: unknown) => void; close: () => void }>()
+/** Servidor fora do ar: recusa novas conexões (como `/__mock/socket/drop`). */
+let refusing = false
 
 const worker = setupWorker(
   ws.link(origin).addEventListener('connection', (connection) => {
+    if (refusing) {
+      connection.client.close()
+      return
+    }
     handshakeTokens.push(connection.client.url.searchParams.get('token'))
     const io = toSocketIo(connection)
     const server = {
@@ -33,10 +39,10 @@ afterAll(() => {
   worker.stop()
 })
 
-const until = async (check: () => boolean) => {
+const until = async (check: () => boolean, timeoutMs = 4000) => {
   const start = Date.now()
   while (!check()) {
-    if (Date.now() - start > 4000) throw new Error('timeout')
+    if (Date.now() - start > timeoutMs) throw new Error('timeout')
     await new Promise((resolve) => setTimeout(resolve, 20))
   }
 }
@@ -106,3 +112,26 @@ it('reconexão após troca de sessão abre nova conexão com o novo token (sem r
   expect(handshakeTokens).toEqual(['sess_ana', 'sess_bruno'])
   client.disconnect()
 })
+
+it('volta a conectar logo depois que o servidor recusa tentativas (sem esperar 20 s)', async () => {
+  const client = createRealtimeClient({
+    url: location.origin,
+    path: '/socket.io',
+    loadIo: () => import('socket.io-client'),
+    getToken: () => 'sess_1',
+    onEvent: () => undefined,
+    onReconnect: () => undefined,
+  })
+  await client.connect()
+  await until(() => client.getStatus() === 'connected')
+
+  refusing = true
+  for (const server of servers) server.close()
+  await until(() => client.getStatus() === 'disconnected')
+  await new Promise((resolve) => setTimeout(resolve, 1000)) // ao menos uma tentativa recusada
+  refusing = false
+  // timeout de conexão (4 s) + backoff máximo (5 s × 1,5): bem abaixo dos 20 s do padrão do Socket.IO.
+  await until(() => client.getStatus() === 'connected', 12_000)
+  expect(client.getStatus()).toBe('connected')
+  client.disconnect()
+}, 20_000)

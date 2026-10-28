@@ -5,7 +5,7 @@
 | Item          | Valor                                                                                                                                                                                     |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Cliente       | `socket.io-client` v4, instância única em `src/shared/realtime/socket.ts`                                                                                                                 |
-| Opções        | `transports: ['websocket']`, `autoConnect: false`, `reconnection: true`, backoff 500 ms → 5 s com jitter                                                                                  |
+| Opções        | `transports: ['websocket']`, `autoConnect: false`, `reconnection: true`, backoff 500 ms → 5 s com jitter, `timeout` 4 s                                                                   |
 | Autenticação  | Token da sessão em `query: { token }`, lido pelo mock em `connection.client.url`. O binding não expõe o `auth` do pacote `CONNECT` ([ADR-0024](adr/0024-bootstrap-do-msw-e-socket-io.md)) |
 | Mock          | `ws.link()` do MSW + [`@mswjs/socket.io-binding`](https://github.com/mswjs/socket.io-binding) em `src/mocks/handlers/socket.ts`                                                           |
 | Ciclo de vida | Conecta quando o app monta; reconecta com novo token ao trocar de sessão; `disconnect()` + remoção de listeners no logout                                                                 |
@@ -15,6 +15,7 @@
 - **Ordem de bootstrap:** o `engine.io-client` captura `WebSocket` ao ser importado. O MSW precisa estar ativo antes do primeiro import de `socket.io-client`, então `main.tsx` importa o app dinamicamente depois de `startMocks()`.
 - **Matching por origem:** o MSW remove `/socket.io/` do caminho, então o `ws.link` usa a origem de `VITE_SOCKET_URL`.
 - **Heartbeat:** o binding não envia `ping`; o handler envia `"2"` a cada 20 s para o cliente não encerrar a conexão por `pingTimeout`.
+- **Conexão recusada:** quando o handler fecha a conexão no próprio evento `connection` (servidor fora do ar), o cliente não recebe o fechamento e fica esperando o timeout de conexão, que por padrão é de 20 s. O cliente usa `timeout: 4000`, então uma tentativa sem resposta é abandonada e reagendada pelo backoff. Esse comportamento também vale para uma conexão sem resposta em produção. O painel de simulação revelou o problema, e há teste de regressão em `realtime-client.browser.test.ts`.
 
 - Apenas WebSocket: o binding não implementa long-polling. Em produção real o fallback poderia ser reativado.
 - O “servidor” roda na mesma aba (contexto da página). Não há fan-out entre abas ou dispositivos.

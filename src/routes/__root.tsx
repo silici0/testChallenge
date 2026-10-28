@@ -1,12 +1,19 @@
 import { createRootRouteWithContext, HeadContent, Outlet } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
-import { useSyncExternalStore } from 'react'
+import { lazy, Suspense, useSyncExternalStore } from 'react'
 
+import { appEnv } from '@/app/env'
 import type { RouterContext } from '@/app/router'
 import { sessionQuery } from '@/features/auth/api'
 import { SiteShell } from '@/features/layout/site-shell'
 import { LiveRegions } from '@/shared/a11y'
 import { Button, EmptyState } from '@/shared/ui'
+
+// Ferramenta de demonstração: fora do bundle principal e ausente quando os mocks estão desligados.
+const MockPanel =
+  appEnv.enableMocks && appEnv.mockPanel
+    ? lazy(() => import('@/features/mock-panel/mock-panel').then((module) => ({ default: module.MockPanel })))
+    : null
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   // A sessão é resolvida antes de qualquer rota (guards de rotas privadas dependem dela).
@@ -55,6 +62,11 @@ function RootLayout() {
       </SiteShell>
       <RealtimeStatus />
       <LiveRegions />
+      {MockPanel && (
+        <Suspense fallback={null}>
+          <MockPanel />
+        </Suspense>
+      )}
     </>
   )
 }

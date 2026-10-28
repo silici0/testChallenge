@@ -53,6 +53,9 @@ export function createRealtimeClient(options: RealtimeClientOptions) {
       auth: credentials,
       reconnectionDelay: 500,
       reconnectionDelayMax: 5000,
+      // Tentativa sem resposta é abandonada em 4 s (padrão: 20 s) e reagendada pelo backoff:
+      // servidor que recusa ou ignora o handshake não deixa o tempo real parado por 20 s.
+      timeout: 4000,
       randomizationFactor: 0.5,
     })
     socket = instance

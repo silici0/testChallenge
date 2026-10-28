@@ -89,7 +89,7 @@ Cupons: `JUNGLE10` (10 %, válido), `WELCOME5` (5 %, subtotal mínimo de 0.5 ETH
 Três formas equivalentes; todas passam pela camada de rede (endpoints de controle `/__mock/*` tratados pelo MSW):
 
 1. **Query string:** `http://localhost:5173/?scenario=payment-declined` — aplica e remove o parâmetro da URL.
-2. **Painel de cenários:** botão “Mock” no canto inferior (habilitado por `VITE_MOCK_PANEL`), com seletor, controles de latência e botão de reset.
+2. **Painel de cenários:** botão “Mock” no canto inferior esquerdo (habilitado por `VITE_MOCK_PANEL`). Ele tem seletor de cenário (a latência é controlada pelos cenários `slow-network` e `variable-latency`), botões para derrubar e restaurar o tempo real e um reset dos dados. Só é carregado quando os mocks estão ativos.
 3. **Playwright:** fixture `scenario` em `tests/e2e/fixtures.ts`.
 
 O cenário ativo fica salvo em `localStorage` (`mock:scenario`) e sobrevive a refresh.

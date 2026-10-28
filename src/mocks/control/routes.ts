@@ -6,6 +6,7 @@ import { ethSchema } from '@/contracts'
 import { nftUpdatedEvent } from '../domain/catalog'
 import { resolveOrder } from '../domain/orders'
 import type { MockServices } from '../http/responder'
+import { SCENARIOS } from '../scenarios/catalog'
 import { SCENARIO_IDS } from '../scenarios/definitions'
 import type { RealtimeServer } from '../socket/server'
 
@@ -29,6 +30,12 @@ export function controlRoutes(services: MockServices, realtime: RealtimeServer) 
   return [
     http.get(`${base}/scenario`, () =>
       HttpResponse.json({ id: scenarios.scenario.id, description: scenarios.scenario.description }),
+    ),
+    http.get(`${base}/scenarios`, () =>
+      HttpResponse.json({
+        active: scenarios.scenario.id,
+        items: SCENARIO_IDS.map((id) => ({ id, description: SCENARIOS[id].description })),
+      }),
     ),
     http.put(`${base}/scenario`, async ({ request }) => {
       const { id, reset } = await body(request, scenarioBody)

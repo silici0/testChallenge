@@ -82,15 +82,16 @@ Implementação: `src/mocks/scenarios/catalog.ts` (definições) e `src/mocks/sc
 
 Tratados pelo MSW, ativos apenas com mocks. Usados pelo painel e pelos testes Playwright — a UI de negócio nunca os chama.
 
-| Método | Rota                               | Corpo                                            | Efeito                                         |
-| ------ | ---------------------------------- | ------------------------------------------------ | ---------------------------------------------- |
-| `GET`  | `/__mock/scenario`                 | —                                                | Cenário ativo                                  |
-| `PUT`  | `/__mock/scenario`                 | `{ id, reset?: boolean }`                        | Ativa cenário (opcionalmente reseedando)       |
-| `POST` | `/__mock/reset`                    | `{ scenario?: ScenarioId }`                      | Reset integral                                 |
-| `POST` | `/__mock/nfts/:nftId`              | `{ editionId, priceEth?, available? }`           | Altera dados e emite `nft.updated`             |
-| `POST` | `/__mock/orders/:orderId/resolve`  | `{ status: 'confirmed' \| 'declined', reason? }` | Resolve pedido e emite `order.updated`         |
-| `POST` | `/__mock/events/replay`            | `{ resource: 'nft:<id>' \| 'order:<id>' }`       | Reenvia o último evento do recurso (duplicata) |
-| `POST` | `/__mock/socket/drop` · `/restore` | —                                                | Derruba / restaura conexões                    |
+| Método | Rota                               | Corpo                                            | Efeito                                               |
+| ------ | ---------------------------------- | ------------------------------------------------ | ---------------------------------------------------- |
+| `GET`  | `/__mock/scenario`                 | —                                                | Cenário ativo                                        |
+| `GET`  | `/__mock/scenarios`                | —                                                | Cenário ativo e lista `{ id, description }` (painel) |
+| `PUT`  | `/__mock/scenario`                 | `{ id, reset?: boolean }`                        | Ativa cenário (opcionalmente reseedando)             |
+| `POST` | `/__mock/reset`                    | `{ scenario?: ScenarioId }`                      | Reset integral                                       |
+| `POST` | `/__mock/nfts/:nftId`              | `{ editionId, priceEth?, available? }`           | Altera dados e emite `nft.updated`                   |
+| `POST` | `/__mock/orders/:orderId/resolve`  | `{ status: 'confirmed' \| 'declined', reason? }` | Resolve pedido e emite `order.updated`               |
+| `POST` | `/__mock/events/replay`            | `{ resource: 'nft:<id>' \| 'order:<id>' }`       | Reenvia o último evento do recurso (duplicata)       |
+| `POST` | `/__mock/socket/drop` · `/restore` | —                                                | Derruba / restaura conexões                          |
 
 ## Simulação de rede
 
