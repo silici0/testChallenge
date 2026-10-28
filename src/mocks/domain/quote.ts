@@ -70,7 +70,12 @@ export function createQuote(db: DbState, userId: string, network: Network): Quot
     couponCode: summary.coupon?.status === 'applied' ? summary.coupon.code : null,
     expiresAt: isoIn(QUOTE_TTL_MS),
   }
-  db.quotes = [...db.quotes.filter((quote) => quote.userId !== userId), record]
+  // Cotações anteriores continuam válidas até expirar (o cliente pode refazer a cotação a qualquer momento);
+  // a revalidação no pedido compara valores, não identidade. Limite por usuário para não crescer sem fim.
+  const now = isoNow()
+  const others = db.quotes.filter((quote) => quote.userId !== userId)
+  const mine = db.quotes.filter((quote) => quote.userId === userId && quote.expiresAt > now).slice(-9)
+  db.quotes = [...others, ...mine, record]
   return record
 }
 

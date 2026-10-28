@@ -44,6 +44,16 @@ No mock, o registro `idempotencyKey → { bodyHash, orderId }` é persistido com
 
 `POST /orders` revalida no servidor: preço de cada edição, disponibilidade, cupom (validade/expiração), taxa de rede e expiração da cotação. Qualquer divergência ⇒ `409 QUOTE_STALE` com nova cotação. O cliente também invalida a cotação ao receber `nft.updated` de item do carrinho, bloqueando a confirmação antes mesmo do envio.
 
+### Diálogo de revisão
+
+Quando a API responde `QUOTE_STALE` ou um `nft.updated` invalida a cotação, o diálogo de revisão compara a cotação anterior com a nova (`quote-diff.ts`) e lista o que mudou: preço, disponibilidade, desconto, taxa e total. O botão de confirmar só fica ativo se a cotação revisada for igual à cotação atual. Ele envia o `quote.id` atual com a **mesma** `Idempotency-Key` da tentativa.
+
+### Envio e retentativas
+
+A mutation `place-order` roda com `scope` serial e faz até 3 retentativas em erros de rede ou 5xx, sempre com a mesma chave. Assim, cliques repetidos e timeouts resultam no mesmo pedido. Os dados do comprador ficam salvos como rascunho em `sessionStorage['checkout:draft']`. Se houver uma tentativa com pedido criado, o pagamento oferece **“Retomar pedido”** em vez de deixar o usuário iniciar uma nova compra.
+
+Se o carrinho estiver vazio, o título “Pagamento” e o breadcrumb continuam na tela, com o estado vazio logo abaixo. Isso mantém a estrutura de títulos estável enquanto o carrinho carrega.
+
 ## Estados do pedido
 
 | Estado      | Tela `/orders/$orderId`                                                                                             |
@@ -64,3 +74,5 @@ O recibo é o snapshot `order.receipt` gravado na criação do pedido; mudanças
 | Reconexão do socket         | Reconciliação via `GET /orders/:id` ([realtime.md](realtime.md#reconciliação-rest--socketio)) |
 | Sessão expirada no checkout | Ver [session.md](session.md#expiração)                                                        |
 | Estado terminal             | `checkout:attempt` removido; eventos posteriores ignorados                                    |
+
+No cenário `order-timeout`, o mock cria o pedido e só então atrasa a resposta (`responseDelay`). Isso reproduz o caso “o servidor processou, mas o cliente não recebeu a resposta”, que o cliente resolve reenviando com a mesma chave.

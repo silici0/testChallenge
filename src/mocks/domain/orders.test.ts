@@ -61,6 +61,12 @@ describe('pedidos simulados', () => {
     expect(await place('key-1', { ...body, network: 'polygon' })).toMatchObject({ code: 'IDEMPOTENCY_CONFLICT' })
   })
 
+  it('nova cotação com os mesmos valores não invalida a revisada (refetch do cliente)', async () => {
+    const { db, place } = await checkoutReady()
+    await db.transaction(({ db: state }) => createQuote(state, 'usr_ana', 'ethereum'))
+    expect(await place('key-refetch')).toMatchObject({ created: true })
+  })
+
   it('preço alterado após a cotação exige nova confirmação (QUOTE_STALE com mudanças)', async () => {
     const { db, place } = await checkoutReady()
     await db.transaction(({ db: state }) => {

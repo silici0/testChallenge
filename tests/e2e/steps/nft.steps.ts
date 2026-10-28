@@ -10,8 +10,7 @@ const edition = (page: Page, label: string) =>
 
 When(
   'a edição {string} do NFT {string} fica com {int} unidades',
-  async ({ page, mock }, editionId: string, nftId: string, available: number) => {
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  async ({ mock }, editionId: string, nftId: string, available: number) => {
     await mock.updateNft(nftId, { editionId, available })
   },
 )

@@ -20,6 +20,7 @@ import { Route as AccountProfileRouteImport } from './routes/account/profile'
 import { Route as AccountWalletsRouteImport } from './routes/account/wallets'
 import { Route as NftsNftIdRouteImport } from './routes/nfts/$nftId'
 import { Route as OrdersOrderIdRouteImport } from './routes/orders/$orderId'
+import { Route as ExplorerTxHashRouteImport } from './routes/explorer/tx/$hash'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,6 +77,11 @@ const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
   path: '/orders/$orderId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExplorerTxHashRoute = ExplorerTxHashRouteImport.update({
+  id: '/explorer/tx/$hash',
+  path: '/explorer/tx/$hash',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/account/wallets': typeof AccountWalletsRoute
   '/nfts/$nftId': typeof NftsNftIdRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
+  '/explorer/tx/$hash': typeof ExplorerTxHashRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/account/wallets': typeof AccountWalletsRoute
   '/nfts/$nftId': typeof NftsNftIdRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
+  '/explorer/tx/$hash': typeof ExplorerTxHashRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/account/wallets': typeof AccountWalletsRoute
   '/nfts/$nftId': typeof NftsNftIdRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
+  '/explorer/tx/$hash': typeof ExplorerTxHashRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/account/wallets'
     | '/nfts/$nftId'
     | '/orders/$orderId'
+    | '/explorer/tx/$hash'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/account/wallets'
     | '/nfts/$nftId'
     | '/orders/$orderId'
+    | '/explorer/tx/$hash'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/account/wallets'
     | '/nfts/$nftId'
     | '/orders/$orderId'
+    | '/explorer/tx/$hash'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   NftsNftIdRoute: typeof NftsNftIdRoute
   OrdersOrderIdRoute: typeof OrdersOrderIdRoute
+  ExplorerTxHashRoute: typeof ExplorerTxHashRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -249,6 +262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/explorer/tx/$hash': {
+      id: '/explorer/tx/$hash'
+      path: '/explorer/tx/$hash'
+      fullPath: '/explorer/tx/$hash'
+      preLoaderRoute: typeof ExplorerTxHashRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -277,6 +297,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   NftsNftIdRoute: NftsNftIdRoute,
   OrdersOrderIdRoute: OrdersOrderIdRoute,
+  ExplorerTxHashRoute: ExplorerTxHashRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

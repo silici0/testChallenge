@@ -134,8 +134,8 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
   'order-timeout': {
     ...BASE,
     id: 'order-timeout',
-    description: 'A 1ª criação de pedido responde depois do timeout do Axios',
-    extraDelay: (request, timeoutMs) =>
+    description: 'A 1ª criação de pedido é efetivada, mas a resposta chega depois do timeout do Axios',
+    responseDelay: (request, timeoutMs) =>
       matches(request, 'POST', /^\/orders$/) && request.attempt === 0 ? timeoutMs + 2000 : 0,
   },
   'payment-confirmed': { ...BASE, id: 'payment-confirmed', description: 'Pedido confirmado após 3 s' },

@@ -53,8 +53,10 @@ export interface Scenario {
   /** Latência em ms (fixa ou intervalo determinístico). */
   latency: number | [number, number]
   offline?: boolean
-  /** Atraso extra por requisição (fora de ordem, timeout). */
+  /** Atraso extra ANTES de executar a regra (respostas fora de ordem). */
   extraDelay?: (request: RequestInfo, timeoutMs: number) => number
+  /** Atraso DEPOIS de executar a regra (efeito aplicado, resposta atrasada — timeout após criar o pedido). */
+  responseDelay?: (request: RequestInfo, timeoutMs: number) => number
   /** Substitui a resposta (erros, sessão expirada). Avaliado antes do handler. */
   intercept?: (request: RequestInfo) => Interception | null
   /** Mudança no catálogo logo após a 1ª cotação (preço alterado / edição esgotada no checkout). */

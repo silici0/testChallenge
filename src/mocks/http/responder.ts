@@ -116,6 +116,14 @@ async function applyInterception(interception: Interception | null, services: Mo
   )
 }
 
+async function execute(handler: Handler, context: RouteContext): Promise<Response> {
+  try {
+    return toResponse(await handler(context))
+  } catch (error) {
+    return toErrorResponse(error)
+  }
+}
+
 /** Cria rotas da API simulada com rede, cenário, autenticação e erros padronizados. */
 export function createRoute(services: MockServices) {
   const build = ({
@@ -152,11 +160,9 @@ export function createRoute(services: MockServices) {
         requireUser: () => services.db.transaction(({ db }) => authenticate(db, token).user),
         json: async <T>() => (await request.json().catch(() => ({}))) as T,
       }
-      try {
-        return toResponse(await handler(context))
-      } catch (error) {
-        return toErrorResponse(error)
-      }
+      const response = await execute(handler, context)
+      await delay(scenarios.scenario.responseDelay?.(info, config.requestTimeoutMs) ?? 0)
+      return response
     }
     return http[method](`*${services.config.apiBase}${path}`, resolver)
   }
