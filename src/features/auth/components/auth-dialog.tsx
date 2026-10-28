@@ -27,7 +27,11 @@ export function AuthDialog({ mode, description, redirect, onClose, children }: A
         if (!open) onClose()
       }}
     >
-      <DialogContent className="max-h-[90dvh] gap-6 overflow-y-auto bg-surface p-8 sm:max-w-[500px]">
+      {/*
+        Ancorado no topo, não centralizado: erros de validação no blur (o e-mail recebe foco ao abrir) aumentam
+        o formulário; centralizado, o diálogo subia entre o mousedown e o mouseup e o clique no X ou nas abas se perdia.
+      */}
+      <DialogContent className="top-[5dvh] max-h-[90dvh] translate-y-0 gap-6 overflow-y-auto bg-surface p-8 sm:max-w-[500px]">
         <nav aria-label="Acesso à conta" className="flex items-center justify-center gap-3">
           <Link
             to="/login"

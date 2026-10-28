@@ -50,3 +50,11 @@ Funcionalidade: Conta e sessão
     Quando entro pela página de login com "bruno@example.test" e senha "Jungle#2026"
     E navego para "/account/favorites"
     Então vejo a mensagem "Nenhum favorito ainda"
+
+  @main
+  Cenário: Fechar o login pelo X volta à página de origem
+    Dado que acesso a rota "/nfts/nft_emerald-ape-042"
+    Quando abro o login pelo cabeçalho
+    E fecho o diálogo pelo X
+    Então vejo o título "Emerald Ape #042"
+    E a URL não contém "/login"

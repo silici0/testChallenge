@@ -115,3 +115,14 @@ Then('o NFT {string} aparece como favorito', async ({ page }, name: string) => {
 Then('o NFT {string} não aparece como favorito', async ({ page }, name: string) => {
   await expect(page.getByRole('button', { name: `Favoritar ${name}` })).toHaveAttribute('aria-pressed', 'false')
 })
+
+When('abro o login pelo cabeçalho', async ({ page }) => {
+  await page.getByRole('banner').getByRole('link', { name: 'Entrar', exact: true }).click()
+  await expect(dialog(page)).toBeVisible()
+})
+
+// Clique real do mouse (mousedown → blur do campo focado → mouseup): é o que reproduz o bug do X.
+When('fecho o diálogo pelo X', async ({ page }) => {
+  await dialog(page).getByRole('button', { name: 'Fechar' }).click()
+  await expect(dialog(page)).toBeHidden()
+})
