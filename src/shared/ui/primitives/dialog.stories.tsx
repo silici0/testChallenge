@@ -51,7 +51,8 @@ export const KeyboardFlow: Story = {
   play: async ({ canvas }) => {
     const trigger = canvas.getByRole('button', { name: 'Entrar' })
     await userEvent.click(trigger)
-    await expect(await screen.findByRole('dialog', { name: 'Criar conta' })).toBeVisible()
+    const dialog = await screen.findByRole('dialog', { name: 'Criar conta' })
+    await waitFor(() => expect(dialog).toBeVisible()) // aguarda o fade-in
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     await expect(trigger).toHaveFocus()

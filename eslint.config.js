@@ -85,7 +85,8 @@ export default tseslint.config(
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
-    files: ['src/main.tsx', 'src/mocks/**'],
+    // Testes podem montar o servidor simulado; código de aplicação não (ADR-0006).
+    files: ['src/main.tsx', 'src/mocks/**', 'src/**/*.test.{ts,tsx}'],
     rules: { 'no-restricted-imports': 'off' },
   },
   {

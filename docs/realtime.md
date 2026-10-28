@@ -32,7 +32,6 @@ type RealtimeEvent<TType extends string, TData> = {
   version: number // mesma versão do recurso na API REST
   occurredAt: string
   userId: string | null // null para eventos públicos
-  sessionId: string | null // sessão que originou a assinatura privada
   data: TData
 }
 ```
@@ -58,7 +57,7 @@ Assinaturas do cliente:
 1. **Dedupe:** LRU com os últimos 500 `eventId`; evento repetido é ignorado antes de qualquer efeito.
 2. **Versão monotônica:** mapa `resource.type:id → version`. Evento com `version <= atual` é descartado. A versão atual também é atualizada por respostas REST (o maior entre REST e evento vence), então um evento antigo não regride dados vindos da API.
 3. **Efeitos únicos:** anúncios, navegação e invalidação só ocorrem após passar por (1) e (2).
-4. **Isolamento por sessão:** evento privado com `userId`/`sessionId` diferente da sessão atual é descartado. Ao trocar de usuário, o socket é desconectado, o mapa de versões e o LRU de dados privados são limpos e uma nova conexão é aberta com o novo token. O servidor simulado também só envia para a sala do usuário autenticado na conexão.
+4. **Isolamento por sessão:** evento privado com `userId` diferente do usuário atual (ou sem sessão) é descartado pelo `EventGate`. Ao trocar de usuário, o `SessionManager` remove `['user']` do cache, zera o `EventGate` e reconecta o socket com o novo token. O servidor simulado também só entrega eventos privados às conexões autenticadas do mesmo usuário (`src/mocks/socket/server.ts`).
 5. **Ciclo de vida:** cada hook de assinatura (`useNftSubscription`, `useOrderSubscription`) registra listeners em `useEffect` e os remove no cleanup; o roteador de eventos é único e não acumula handlers.
 
 ## Reconciliação REST ↔ Socket.IO

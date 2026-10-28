@@ -161,8 +161,8 @@ export function createRoute(services: MockServices) {
     return http[method](`*${services.config.apiBase}${path}`, resolver)
   }
   return {
-    route: (method: HttpMethod, path: string, handler: Handler) => build(method, path, handler, {}),
+    route: (method: HttpMethod, path: string, handler: Handler) => build({ method, path, handler, options: {} }),
     privateRoute: (method: HttpMethod, path: string, handler: Handler) =>
-      build(method, path, handler, { private: true }),
+      build({ method, path, handler, options: { private: true } }),
   }
 }

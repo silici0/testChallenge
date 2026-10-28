@@ -4,8 +4,8 @@ import type { z } from 'zod'
 import { toApiError } from './api-error'
 
 export interface AuthState {
-  token?: string | undefined
-  guestCartId?: string | undefined
+  token?: string | null | undefined
+  guestCartId?: string | null | undefined
 }
 
 export interface HttpClientOptions {

@@ -16,7 +16,7 @@ Fábricas em `src/features/*/keys.ts`. Tudo que é privado fica sob `['user', us
 | Favoritos            | `['user', uid, 'favorites']`                     | 60 s                                | 5 min      |
 | Carrinho (usuário)   | `['user', uid, 'cart']`                          | 0                                   | 5 min      |
 | Carrinho (visitante) | `['cart','guest', guestId]`                      | 0                                   | 5 min      |
-| Cotação              | `['user', uid, 'quote', network, cartVersion]`   | 0                                   | 30 s       |
+| Cotação              | `['user', uid, 'quote', network]`                | 0                                   | 30 s       |
 | Pedido               | `['user', uid, 'orders', orderId]`               | 0                                   | 10 min     |
 | Pedidos pendentes    | `['user', uid, 'orders', { status: 'pending' }]` | 0                                   | 1 min      |
 | Perfil               | `['user', uid, 'profile']`                       | 5 min                               | 10 min     |

@@ -9,6 +9,7 @@ Funcionalidade: Página inicial
     Dado que acesso a página inicial
     Então vejo o título "SEJA DONO DO FUTURO DA ARTE DIGITAL"
     E a página não tem rolagem horizontal
+    E vejo o indicador "Tempo real conectado"
 
   Cenário: Rota inexistente
     Dado que acesso a rota "/rota-que-nao-existe"

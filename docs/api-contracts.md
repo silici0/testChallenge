@@ -394,7 +394,6 @@ Tratados pelo MSW; não fazem parte da API de negócio. Detalhes em [mock-scenar
 | ------------- | --------------------------------------------------------------------------- |
 | `GET` / `PUT` | `/__mock/scenario`                                                          |
 | `POST`        | `/__mock/reset`                                                             |
-| `PUT`         | `/__mock/network` (latência, falhas)                                        |
 | `POST`        | `/__mock/nfts/:nftId` (altera preço/disponibilidade e emite `nft.updated`)  |
 | `POST`        | `/__mock/orders/:orderId/resolve` (confirma/recusa e emite `order.updated`) |
 | `POST`        | `/__mock/socket/drop` · `/__mock/socket/restore`                            |

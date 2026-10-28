@@ -27,3 +27,7 @@ Then('a página não tem rolagem horizontal', async ({ page }) => {
   )
   expect(overflow).toBe(0)
 })
+
+Then('vejo o indicador {string}', async ({ page }, text: string) => {
+  await expect(page.getByText(text)).toBeVisible()
+})

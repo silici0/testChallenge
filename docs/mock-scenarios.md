@@ -76,22 +76,21 @@ type Scenario = {
 | `wallet-rejected`       | seed     | 150 ms                     | `POST /me/wallets/*/connect` ⇒ `422 WALLET_REJECTED`                                       |
 | `wallet-disconnect`     | seed     | 150 ms                     | 2 s após conectar ⇒ `wallet.updated { connection: 'disconnected' }`                        |
 
-Cenários são combináveis com overrides de rede via `/__mock/network`.
+Implementação: `src/mocks/scenarios/catalog.ts` (definições) e `src/mocks/scenarios/runtime.ts` (cenário ativo, contadores por rota, latência determinística e gatilhos únicos).
 
 ## Endpoints de controle
 
 Tratados pelo MSW, ativos apenas com mocks. Usados pelo painel e pelos testes Playwright — a UI de negócio nunca os chama.
 
-| Método | Rota                               | Corpo                                                           | Efeito                                   |
-| ------ | ---------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
-| `GET`  | `/__mock/scenario`                 | —                                                               | Cenário ativo                            |
-| `PUT`  | `/__mock/scenario`                 | `{ id, reset?: boolean }`                                       | Ativa cenário (opcionalmente reseedando) |
-| `POST` | `/__mock/reset`                    | `{ scenario?: ScenarioId }`                                     | Reset integral                           |
-| `PUT`  | `/__mock/network`                  | `{ latencyMs?, offline?, failNext?: { match, status, count } }` | Override de rede                         |
-| `POST` | `/__mock/nfts/:nftId`              | `{ editionId, priceEth?, available? }`                          | Altera dados e emite `nft.updated`       |
-| `POST` | `/__mock/orders/:orderId/resolve`  | `{ status: 'confirmed' \| 'declined', reason? }`                | Resolve pedido e emite `order.updated`   |
-| `POST` | `/__mock/events/replay`            | `{ eventId }`                                                   | Reemite um evento já enviado (duplicata) |
-| `POST` | `/__mock/socket/drop` · `/restore` | —                                                               | Derruba / restaura conexões              |
+| Método | Rota                               | Corpo                                            | Efeito                                         |
+| ------ | ---------------------------------- | ------------------------------------------------ | ---------------------------------------------- |
+| `GET`  | `/__mock/scenario`                 | —                                                | Cenário ativo                                  |
+| `PUT`  | `/__mock/scenario`                 | `{ id, reset?: boolean }`                        | Ativa cenário (opcionalmente reseedando)       |
+| `POST` | `/__mock/reset`                    | `{ scenario?: ScenarioId }`                      | Reset integral                                 |
+| `POST` | `/__mock/nfts/:nftId`              | `{ editionId, priceEth?, available? }`           | Altera dados e emite `nft.updated`             |
+| `POST` | `/__mock/orders/:orderId/resolve`  | `{ status: 'confirmed' \| 'declined', reason? }` | Resolve pedido e emite `order.updated`         |
+| `POST` | `/__mock/events/replay`            | `{ resource: 'nft:<id>' \| 'order:<id>' }`       | Reenvia o último evento do recurso (duplicata) |
+| `POST` | `/__mock/socket/drop` · `/restore` | —                                                | Derruba / restaura conexões                    |
 
 ## Simulação de rede
 

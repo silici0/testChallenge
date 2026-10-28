@@ -39,7 +39,10 @@ export default defineConfig({
         'src/routeTree.gen.ts',
         'src/mocks/**',
         'src/main.tsx',
-        'src/app/**',
+        // Composição pura (sem regra própria): coberta pelo E2E.
+        'src/app/bootstrap.tsx',
+        'src/app/router.tsx',
+        'src/app/env.ts',
         'src/routes/**',
         'src/shared/design-tokens/token-dictionary.tsx',
       ],

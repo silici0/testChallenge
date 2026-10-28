@@ -2,16 +2,22 @@ import type { QueryClient } from '@tanstack/react-query'
 import { createRouter } from '@tanstack/react-router'
 
 import { routeTree } from '@/routeTree.gen'
+import type { RealtimeClient } from '@/shared/realtime'
+
+import type { SessionManager } from './session-manager'
 
 export interface RouterContext {
   queryClient: QueryClient
+  session: SessionManager
+  realtime: RealtimeClient
 }
 
-export function createAppRouter(queryClient: QueryClient) {
+export function createAppRouter(context: RouterContext) {
   return createRouter({
     routeTree,
-    context: { queryClient },
+    context,
     defaultPreload: 'intent',
+    // O TanStack Query controla o cache; o router sempre delega a ele.
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
   })

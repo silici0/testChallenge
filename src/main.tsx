@@ -1,23 +1,20 @@
 import './styles/index.css'
 
-import { QueryClientProvider } from '@tanstack/react-query'
-import { RouterProvider } from '@tanstack/react-router'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { appEnv } from './app/env'
 
-import { createQueryClient } from './app/query-client'
-import { createAppRouter } from './app/router'
+/**
+ * Ordem obrigatória (ADR-0024): o MSW precisa interceptar WebSocket antes de o socket.io-client ser
+ * importado, então o app inteiro é carregado dinamicamente depois de startMocks().
+ */
+async function start() {
+  const container = document.getElementById('root')
+  if (!container) throw new Error('Elemento #root não encontrado')
+  if (appEnv.enableMocks) {
+    const { startMocks } = await import('./mocks/browser')
+    await startMocks()
+  }
+  const { mountApp } = await import('./app/bootstrap')
+  mountApp(container)
+}
 
-const queryClient = createQueryClient()
-const router = createAppRouter(queryClient)
-
-const container = document.getElementById('root')
-if (!container) throw new Error('Elemento #root não encontrado')
-
-createRoot(container).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </StrictMode>,
-)
+void start()

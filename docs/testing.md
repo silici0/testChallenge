@@ -9,15 +9,16 @@ Decisões: [ADR-0014](adr/0014-playwright-e2e-e-regressao-visual.md) (Playwright
 | Unitário (lógica, hooks)           | Vitest + jsdom                        | `src/**/*.test.ts`             | `pnpm test` / `pnpm test:unit` | Node                     |
 | Componente                         | Vitest + Testing Library + user-event | `src/**/*.test.tsx`            | `pnpm test:unit`               | Node (jsdom)             |
 | Story (interação + acessibilidade) | Storybook + Vitest browser + axe      | `src/**/*.stories.tsx`         | `pnpm test:stories`            | Chromium                 |
+| Integração (MSW + Socket.IO reais) | Vitest browser                        | `src/**/*.browser.test.ts`     | `pnpm test:coverage`           | Chromium                 |
 | Visual por componente              | Playwright sobre o Storybook estático | `tests/visual/`                | `pnpm test:visual`             | Docker (imagem oficial)  |
 | E2E / BDD                          | Playwright + playwright-bdd           | `tests/e2e/features/*.feature` | `pnpm test:e2e`                | Build + MSW, 3 viewports |
 | Performance                        | Lighthouse CI                         | `lighthouse/`                  | `pnpm lighthouse`              | Build + MSW              |
 
-`pnpm test:coverage` roda os testes unitários e de story juntos e aplica os limites de cobertura. O mesmo comando roda no `pre-push` e na CI.
+`pnpm test:coverage` roda os testes unitários, de integração e de story juntos e aplica os limites de cobertura. O mesmo comando roda no `pre-push` e na CI.
 
 ## Cobertura
 
-Medida com v8 sobre unitários e stories (as stories cobrem o que o jsdom não renderiza, como o posicionamento do Select e as animações do Toaster). Relatório em `coverage/`.
+Medida com v8 sobre unitários, integração e stories (as stories cobrem o que o jsdom não renderiza, como o posicionamento do Select e as animações do Toaster). Relatório em `coverage/`.
 
 | Escopo                | Statements | Branches | Functions | Lines |
 | --------------------- | ---------: | -------: | --------: | ----: |
@@ -33,6 +34,17 @@ Ficam fora da medição: rotas e bootstrap (`src/routes`, `src/app`, `main.tsx`)
 - Interação com `userEvent`, nunca `fireEvent`, para simular teclado e foco reais.
 - Hooks testados com `renderHook`, isolados da UI.
 - `src/test/setup.ts` fornece `ResizeObserver` e as APIs de pointer capture que o jsdom não tem e que as primitivas Radix usam.
+
+## Integração (navegador real)
+
+Arquivos `*.browser.test.ts` rodam no Chromium com o MSW de verdade: service worker para REST e interceptação de WebSocket para o Socket.IO. No Node, o `socket.io-client` usa o pacote `ws`, que o MSW não intercepta ([ADR-0024](adr/0024-bootstrap-do-msw-e-socket-io.md)).
+
+| Arquivo                                               | Garante                                                                                                                           |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `src/mocks/socket-binding.browser.test.ts`            | Premissas do `@mswjs/socket.io-binding` (matching por origem, token na query, import tardio)                                      |
+| `src/mocks/server.browser.test.ts`                    | Compra completa com idempotência, eventos privados isolados, REST e evento com a mesma versão, sessão expirada, merge do carrinho |
+| `src/features/api.browser.test.ts`                    | **Teste de contrato:** cada função de API das features contra os handlers simulados                                               |
+| `src/shared/realtime/realtime-client.browser.test.ts` | Conexão, validação de eventos, reassinatura e reconciliação após queda                                                            |
 
 ## Stories
 
