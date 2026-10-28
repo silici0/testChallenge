@@ -30,8 +30,15 @@ for (const story of stories) {
     })
     await page.evaluate(async () => {
       // O play de algumas stories deixa foco: o anel de foco não entra na captura (antialiasing instável).
-      if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+      // Em diálogos o trap de foco devolve o foco a um elemento variável após blur(): foca o próprio container.
+      const dialog = document.querySelector('[role="dialog"]')
+      if (dialog instanceof HTMLElement) {
+        dialog.style.outline = 'none' // anel de foco do container é artefato da captura, não do componente
+        dialog.focus()
+      } else if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
       await document.fonts.ready
+      // Imagens ainda decodificando (galeria, diálogo) geram quadros diferentes entre execuções.
+      await Promise.all([...document.images].map((image) => image.decode().catch(() => undefined)))
       await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined)))
     })
     // Stories com portal (dialog, sheet, select aberto) capturam a página inteira.

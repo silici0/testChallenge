@@ -156,7 +156,7 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------ | ------ |
 | Fidelidade ao Figma; shadcn/ui adaptado                                                | Tokens ([ADR-0013](adr/0013-tailwind-v4-e-shadcn-com-tokens-do-figma.md))                              | visual | ⬜     |
 | 390, 768, 1440 px                                                                      | Projetos Playwright                                                                                    | visual | 🟡     |
-| Skeletons com shimmer (catálogo, detalhe, resumo do carrinho), sem CLS, reduced motion | `Skeleton`                                                                                             | 12     | ⬜     |
+| Skeletons com shimmer (catálogo, detalhe, resumo do carrinho), sem CLS, reduced motion | `Skeleton`                                                                                             | 12     | ✅     |
 | Itens de acessibilidade obrigatórios                                                   | [accessibility.md](accessibility.md)                                                                   | 11     | ✅     |
 | Assets locais; substituições e ajustes documentados                                    | [ARCHITECTURE §7](../ARCHITECTURE.md#7-desvios-do-figma) (documentado); exportação dos assets pendente | —      | 🟡     |
 

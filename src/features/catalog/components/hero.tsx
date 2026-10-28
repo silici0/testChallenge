@@ -29,6 +29,8 @@ export function Hero({ slides, cta }: HeroProps) {
           e tenha uma parte da cultura da internet.
         </p>
         <div>{cta}</div>
+        {/* Reserva a linha dos indicadores enquanto os destaques carregam (evita CLS). */}
+        {!slides && <div aria-hidden="true" className="h-3" />}
         {slides && slides.length > 1 && (
           <div role="group" aria-label="Destaques" className="flex gap-2 self-center md:self-end">
             {slides.map((slide, index) => (

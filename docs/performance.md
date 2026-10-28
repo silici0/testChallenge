@@ -57,6 +57,6 @@ _Justificar cada categoria abaixo da meta, com causa identificada (ex.: registro
 - Code splitting por rota (TanStack Router `autoCodeSplitting`) e import dinâmico dos mocks.
 - Imagem LCP do destaque com `fetchpriority="high"`, `width`/`height` explícitos, formatos AVIF/WebP com `srcset`.
 - Fontes locais `woff2` com `font-display: swap` e preload da fonte principal; métricas de fallback ajustadas (`size-adjust`) para evitar CLS.
-- Skeletons com as dimensões finais (CLS ≈ 0).
+- Skeletons com as dimensões finais (CLS ≈ 0). O cenário `carregamento-e-erros.feature` mede o CLS com `slow-network`. Ele detectou 0,11 na Início porque os indicadores do carrossel apareciam só depois dos destaques; agora a linha fica reservada durante o carregamento.
 - `<title>`, `meta description`, `lang="pt-BR"`, `robots.txt` e links rastreáveis (`<a href>`) para SEO.
 - Sem erros no console no cenário padrão (Best Practices).
