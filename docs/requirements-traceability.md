@@ -111,7 +111,7 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 | Cancelamento/descarte de respostas obsoletas           | `signal` + keys                                                   | ⬜     |
 | Isolamento por usuário e parâmetros                    | `['user', uid]`, `normalizedParams`                               | ⬜     |
 | Recuperação sem duplicar operações                     | Retries só em retryable; idempotência                             | ⬜     |
-| Rotas inexistentes e acesso direto                     | `notFoundComponent`, rewrites da Vercel                           | ⬜     |
+| Rotas inexistentes e acesso direto                     | `notFoundComponent`, rewrites da Vercel                           | ✅     |
 | Atualização otimista com rollback                      | Favoritos                                                         | ⬜     |
 | Política de cache, retries e sincronização documentada | [cache-strategy.md](cache-strategy.md)                            | ✅     |
 
@@ -134,7 +134,7 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 | Fixtures: variedade, ≥ 2 usuários                                              | 63 NFTs, Ana e Bruno                                     | ⬜     |
 | Cenários determinísticos listados                                              | [Catálogo](mock-scenarios.md#cenários-srcmocksscenarios) | ⬜     |
 | Eventos via MSW compatível com Socket.IO; transporte e limitações documentados | [realtime.md](realtime.md#transporte)                    | ⬜     |
-| Mocks ativados por configuração e disponíveis no build de demonstração         | `VITE_ENABLE_MOCKS`                                      | ⬜     |
+| Mocks ativados por configuração e disponíveis no build de demonstração         | `VITE_ENABLE_MOCKS`                                      | ✅     |
 | Mudanças refletidas em REST e eventos                                          | Barramento do banco simulado                             | ⬜     |
 
 ## §7 Tempo real
@@ -183,15 +183,15 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 
 ## §12 Entrega
 
-| Requisito                                                                        | Solução                                                               | Status                                            |
-| -------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------- |
-| Código, lockfile, assets, mocks, fixtures, testes, configs de auditoria          | Repositório                                                           | ⬜                                                |
-| Deploy público com mocks e tempo real; acesso direto e refresh                   | [ADR-0016](adr/0016-deploy-vercel-com-mocks.md)                       | ⬜                                                |
-| README: setup, env, credenciais, cenários e reset, comandos, fluxos de falha     | [README](../README.md)                                                | ✅ (documentado)                                  |
-| Docs: contratos REST e eventos, sessão, carrinho, cache, reconciliação           | `docs/`                                                               | ✅ (documentado)                                  |
-| `ARCHITECTURE.md`: limitações, decisões de UX, desvios do Figma                  | [ARCHITECTURE.md](../ARCHITECTURE.md), [docs/figma/](figma/README.md) | ✅ (documentado; revisar durante a implementação) |
-| Comandos: dev com mocks, build, preview, typecheck, lint, Playwright, Lighthouse | [README §6](../README.md#6-comandos)                                  | ⬜ (implementar scripts)                          |
-| Executa de checkout limpo, sem serviços privados                                 | —                                                                     | ⬜                                                |
+| Requisito                                                                        | Solução                                                               | Status                                                                                                 |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Código, lockfile, assets, mocks, fixtures, testes, configs de auditoria          | Repositório                                                           | ✅ https://github.com/silici0/testChallenge                                                            |
+| Deploy público com mocks e tempo real; acesso direto e refresh                   | [ADR-0016](adr/0016-deploy-vercel-com-mocks.md)                       | ✅ https://testchallenge-one.vercel.app/ (smoke no ar: rotas diretas, refresh, tempo real, 404 do app) |
+| README: setup, env, credenciais, cenários e reset, comandos, fluxos de falha     | [README](../README.md)                                                | ✅ (documentado)                                                                                       |
+| Docs: contratos REST e eventos, sessão, carrinho, cache, reconciliação           | `docs/`                                                               | ✅ (documentado)                                                                                       |
+| `ARCHITECTURE.md`: limitações, decisões de UX, desvios do Figma                  | [ARCHITECTURE.md](../ARCHITECTURE.md), [docs/figma/](figma/README.md) | ✅ (documentado; revisar durante a implementação)                                                      |
+| Comandos: dev com mocks, build, preview, typecheck, lint, Playwright, Lighthouse | [README §6](../README.md#6-comandos)                                  | ✅                                                                                                     |
+| Executa de checkout limpo, sem serviços privados                                 | —                                                                     | ✅ clone do GitHub: install `--frozen-lockfile`, `validate` (376 testes) e `build`                     |
 
 ## Fundação de engenharia (além do enunciado)
 
