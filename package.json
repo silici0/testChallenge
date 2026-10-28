@@ -36,6 +36,9 @@
     "validate": "pnpm typecheck && pnpm lint && pnpm format:check && node scripts/check-playwright-image.mjs && pnpm test:coverage",
     "prepare": "husky",
     "test:visual:local": "playwright test -c playwright.visual.config.ts",
+    "test:visual:pages": "scripts/playwright-docker.sh -c playwright.pages.config.ts",
+    "test:visual:pages:update": "scripts/playwright-docker.sh -c playwright.pages.config.ts --update-snapshots=all",
+    "test:visual:pages:local": "playwright test -c playwright.pages.config.ts",
     "test:e2e:docker": "bddgen && scripts/playwright-docker.sh"
   },
   "dependencies": {

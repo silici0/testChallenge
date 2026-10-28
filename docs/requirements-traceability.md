@@ -51,7 +51,7 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 | Cadastro                                                        | Criação, validação, conflito                                       | 03                     | ✅     |
 | Perfil                                                          | Dados, avatar, senha                                               | 08                     | ✅     |
 | Carteiras                                                       | Principal e secundária, cadastro e edição                          | 08                     | ✅     |
-| Frames desktop e mobile; perfil/carteiras/confirmação em mobile | Layout responsivo 390/768/1440                                     | visual + `@responsive` | 🟡     |
+| Frames desktop e mobile; perfil/carteiras/confirmação em mobile | Layout responsivo 390/768/1440                                     | visual + `@responsive` | ✅     |
 | Ações fora do escopo não aparentam sucesso                      | [ARCHITECTURE §5](../ARCHITECTURE.md#5-decisões-de-ux)             | 11                     | ⬜     |
 
 ### Catálogo e detalhe
@@ -155,7 +155,7 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 | Requisito                                                                              | Solução                                                                                                | Spec   | Status |
 | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------ | ------ |
 | Fidelidade ao Figma; shadcn/ui adaptado                                                | Tokens ([ADR-0013](adr/0013-tailwind-v4-e-shadcn-com-tokens-do-figma.md))                              | visual | ⬜     |
-| 390, 768, 1440 px                                                                      | Projetos Playwright                                                                                    | visual | 🟡     |
+| 390, 768, 1440 px                                                                      | Projetos Playwright                                                                                    | visual | ✅     |
 | Skeletons com shimmer (catálogo, detalhe, resumo do carrinho), sem CLS, reduced motion | `Skeleton`                                                                                             | 12     | ✅     |
 | Itens de acessibilidade obrigatórios                                                   | [accessibility.md](accessibility.md)                                                                   | 11     | ✅     |
 | Assets locais; substituições e ajustes documentados                                    | [ARCHITECTURE §7](../ARCHITECTURE.md#7-desvios-do-figma) (documentado); exportação dos assets pendente | —      | 🟡     |
@@ -166,7 +166,7 @@ Legenda: ⬜ pendente · 🟡 em andamento · ✅ entregue
 | --------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
 | 12 grupos de cenários                                                 | [Matriz](testing.md#matriz-de-cobertura-exigida-pelo-enunciado-9) | ⬜     |
 | Chromium desktop e mobile                                             | Projetos `desktop`/`mobile`                                       | ⬜     |
-| Regressão visual (início, detalhe, carrinho, pagamento) com baselines | `__screenshots__/`                                                | ⬜     |
+| Regressão visual (início, detalhe, carrinho, pagamento) com baselines | `tests/visual-pages/` (3 viewports)                               | ✅     |
 | Estado isolado; controle de relógio, latência e eventos               | Fixtures `mock`, `page.clock`                                     | ⬜     |
 | Relatório HTML e traces de falha                                      | Config do Playwright                                              | ⬜     |
 | Tempo real pelo cliente Socket.IO; REST pelos handlers MSW            | Sem stubs no cliente                                              | ⬜     |

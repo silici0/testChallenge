@@ -54,7 +54,7 @@ Arquivos `*.browser.test.ts` rodam no Chromium com o MSW de verdade: service wor
 ## Regressão visual por componente
 
 - `tests/visual/stories.spec.ts` lê o `storybook-static/index.json` e captura cada story com a tag `visual`. Stories que usam portal (dialog, sheet, select aberto) também levam a tag `visual:page` e capturam a página inteira.
-- Para estabilizar a captura: movimento reduzido emulado, animações desativadas, espera pelas fontes e por `document.getAnimations()`.
+- Para estabilizar a captura: movimento reduzido emulado, animações desativadas, espera pelas fontes, pela decodificação das imagens e por `document.getAnimations()`. Em diálogos, o foco vai para o próprio container, porque depois de `blur()` o trap de foco devolve o foco a um elemento diferente a cada execução.
 - **As baselines são geradas e comparadas dentro de `mcr.microsoft.com/playwright:v<versão>-noble`** (`scripts/playwright-docker.sh`), com a mesma versão do `@playwright/test`. A renderização de fontes muda entre sistemas operacionais, então rodar fora do container (`pnpm test:visual:local`) serve só para depuração. `node scripts/check-playwright-image.mjs` garante que a imagem da CI acompanha o lockfile.
 - **Tolerância zero** (`maxDiffPixels: 0`, apenas variação de cor por antialiasing): como o container é determinístico, qualquer pixel diferente falha. Uma tolerância percentual deixaria passar regressões finas, como uma borda de 1px; isso aconteceu e motivou a regra.
 - As baselines ficam versionadas em `tests/visual/__screenshots__/`. Para atualizar, rode `pnpm test:visual:update`, que regrava **todas** as capturas (`--update-snapshots=all`), e revise as imagens no diff do PR.
@@ -98,7 +98,14 @@ Arquivos `*.browser.test.ts` rodam no Chromium com o MSW de verdade: service wor
 | 12  | `carregamento-e-erros.feature`         | Skeletons em rede lenta, sem CLS, erro e nova tentativa, movimento reduzido                                        | ✅ (skeleton em rede lenta, CLS < 0.1, retry manual e automático, movimento reduzido) |
 | —   | `home.feature`                         | Smoke: acesso direto, sem rolagem horizontal, rota inexistente                                                     | ✅                                                                                    |
 
-Regressão visual de página (exigida no §9): Início, Detalhe, Carrinho e Pagamento em `desktop`, `tablet` e `mobile`, com baselines em `tests/e2e/__screenshots__/`, também geradas no container (`pnpm test:e2e:docker -- --update-snapshots`).
+## Regressão visual de página
+
+Exigida no §9: Início, Detalhe, Carrinho e Pagamento em `desktop` (1440), `tablet` (768) e `mobile` (390). A config é `playwright.pages.config.ts` e o spec é `tests/visual-pages/pages.spec.ts`. O teste roda sobre o build de produção com o servidor simulado.
+
+- Relógio fixo (`page.clock.setFixedTime`), banco simulado resetado (`?reset=1`), tempo real conectado, nenhum `aria-busy`, imagens lazy forçadas para `eager` e decodificadas, captura de página inteira.
+- Mesmo critério das stories: container do Playwright e tolerância zero. Duas regravações seguidas geram arquivos idênticos byte a byte.
+- Baselines em `tests/visual-pages/__screenshots__/<viewport>/`. Comandos: `pnpm test:visual:pages` para comparar e `pnpm test:visual:pages:update` para regravar.
+- No mobile, a barra inferior fixa aparece no ponto da viewport dentro da captura de página inteira. É o comportamento do Playwright para elementos `fixed` e é determinístico.
 
 ## CI (`.github/workflows/ci.yml`)
 
@@ -106,6 +113,6 @@ Regressão visual de página (exigida no §9): Início, Detalhe, Carrinho e Paga
 | ------------ | ----------------------------------------------------------------------------------------------------- |
 | `quality`    | Tokens sincronizados, typecheck, lint, Prettier, versão da imagem do Playwright e commitlint (em PRs) |
 | `tests`      | `pnpm test:coverage` (unitários + stories no Chromium) e artefato `coverage/`                         |
-| `visual`     | Regressão visual dos componentes no container do Playwright                                           |
+| `visual`     | Regressão visual dos componentes e das páginas no container do Playwright                             |
 | `e2e`        | BDD/E2E nos 3 viewports, no container; artefato com relatório e traces                                |
 | `lighthouse` | Somente na `main`: `pnpm lighthouse` e artefato com os relatórios                                     |
